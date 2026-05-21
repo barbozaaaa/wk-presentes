@@ -1,0 +1,102 @@
+.page { padding: 2rem 2.5rem; max-width: 960px; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; }
+.header h1 { font-size: 1.5rem; font-weight: 800; color: #2c1810; margin: 0 0 0.2rem; }
+.sub { color: #9a8070; font-size: 0.82rem; margin: 0; }
+
+.n8nBadge {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.4rem 0.875rem;
+  background: linear-gradient(135deg, #1a3a6a, #2a5aaa);
+  color: #fff; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 700;
+}
+
+.webhookCard {
+  background: #fff; border: 1px solid #f0e8dc; border-radius: 16px;
+  padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;
+}
+
+.webhookHead {
+  display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;
+}
+.webhookIcon { font-size: 1.5rem; flex-shrink: 0; }
+.webhookTitle { font-size: 0.95rem; font-weight: 700; color: #2c1810; margin-bottom: 0.2rem; }
+.webhookDesc  { font-size: 0.78rem; color: #9a8070; }
+
+.savedBadge {
+  margin-left: auto; padding: 0.3rem 0.75rem;
+  background: #edf8f2; color: #1a6040;
+  border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+}
+
+.webhookForm { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; }
+
+.webhookInput {
+  flex: 1; padding: 0.65rem 0.875rem;
+  border: 1.5px solid #e8ddd0; border-radius: 10px;
+  font-size: 0.85rem; color: #2c1810; outline: none;
+  transition: border-color 0.15s;
+}
+.webhookInput:focus { border-color: #c17f4a; }
+.webhookInput::placeholder { color: #bba898; }
+
+.webhookBtn {
+  padding: 0.65rem 1.25rem;
+  background: linear-gradient(135deg, #c17f4a, #a86030);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 0.875rem; font-weight: 700; cursor: pointer;
+}
+.webhookBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.webhookHelp {
+  font-size: 0.78rem; color: #6b5040;
+  background: #fdf8f3; border-radius: 8px; padding: 0.65rem 0.875rem;
+  border: 1px solid #f0e4d4; line-height: 1.5;
+}
+
+.flowGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+
+.flowCard {
+  background: #fff; border: 1.5px solid #f0e8dc; border-radius: 14px;
+  overflow: hidden; transition: border-color 0.2s;
+}
+.flowActive { border-color: #c8e8d8; }
+
+.flowHead {
+  display: flex; align-items: flex-start; gap: 0.875rem;
+  padding: 1.1rem 1.1rem 0.75rem;
+}
+.flowIcon  { font-size: 1.5rem; flex-shrink: 0; }
+.flowInfo  { flex: 1; }
+.flowTitle { font-size: 0.88rem; font-weight: 700; color: #2c1810; margin-bottom: 0.2rem; }
+.flowDesc  { font-size: 0.75rem; color: #9a8070; line-height: 1.4; }
+
+.toggle {
+  flex-shrink: 0; padding: 0.3rem 0.75rem;
+  border-radius: 20px; border: none; cursor: pointer;
+  font-size: 0.72rem; font-weight: 700;
+  transition: all 0.15s;
+}
+.toggleOn  { background: #d4f0e3; color: #1a6644; }
+.toggleOff { background: #ede8e3; color: #6b5040; }
+
+.flowDetails {
+  padding: 0.75rem 1.1rem 1rem;
+  border-top: 1px solid #f5ede4;
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.flowDetail { display: flex; gap: 0.75rem; }
+.detailLabel { font-size: 0.72rem; font-weight: 600; color: #9a8070; white-space: nowrap; }
+.detailValue { font-size: 0.75rem; color: #5a3820; }
+
+.aiCard {
+  display: flex; gap: 1rem; align-items: flex-start;
+  background: linear-gradient(135deg, #f0f4ff, #e8ecff);
+  border: 1px solid #c8d4f8; border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+}
+.aiIcon  { font-size: 2rem; flex-shrink: 0; }
+.aiTitle { font-size: 0.9rem; font-weight: 700; color: #1a2a6a; margin-bottom: 0.3rem; }
+.aiDesc  { font-size: 0.78rem; color: #2a3a7a; line-height: 1.5; }
+
+@media (max-width: 720px) { .flowGrid { grid-template-columns: 1fr; } }

@@ -1,0 +1,49 @@
+.splash {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #faf3eb, #f5ebe0);
+  gap: 0.75rem;
+}
+.splashIcon { font-size: 3rem; animation: pop 0.8s ease; }
+.splashText {
+  font-size: 1.25rem; font-weight: 800; color: #2c1810;
+  letter-spacing: -0.02em;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #faf5f0;
+}
+
+.main {
+  flex: 1;
+  margin-left: 240px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem; left: 50%; transform: translateX(-50%);
+  background: #2c1810;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 30px rgba(44,24,16,0.3);
+  z-index: 9999;
+  animation: slideUp 0.25s ease;
+  white-space: nowrap;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

@@ -1,0 +1,110 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #fff;
+  border-right: 1px solid #e8e0d8;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0;
+  z-index: 100;
+}
+
+.brand {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid #f0e8e0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logoIcon {
+  font-size: 1.75rem;
+}
+
+.logoName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c1810;
+  letter-spacing: -0.01em;
+}
+
+.logoPlan {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #c17f4a;
+}
+
+.nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.875rem;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+  color: #6b5040;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.navItem:hover { background: #f7f0e8; }
+
+.navItem.active {
+  background: #f0e4d4;
+  color: #7a3d1a;
+  font-weight: 600;
+}
+
+.navIcon { font-size: 1.1rem; width: 1.4rem; text-align: center; }
+.navLabel { flex: 1; }
+
+.bottom {
+  padding: 1rem;
+  border-top: 1px solid #f0e8e0;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c17f4a, #e8a060);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.userInfo { flex: 1; min-width: 0; }
+.userName  { font-size: 0.8rem; font-weight: 600; color: #2c1810; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.userEmail { font-size: 0.68rem; color: #9a8070; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.signOut {
+  background: none; border: none; cursor: pointer;
+  color: #9a8070; font-size: 1.1rem; padding: 0.25rem;
+  border-radius: 6px; transition: color 0.15s;
+}
+.signOut:hover { color: #c17f4a; }

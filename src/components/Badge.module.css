@@ -1,0 +1,17 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.green  { background: #d4f0e3; color: #1a6644; }
+.amber  { background: #fdeec8; color: #8a5a00; }
+.red    { background: #fdddd9; color: #8a1a0a; }
+.blue   { background: #d4e8fb; color: #0d4a8a; }
+.purple { background: #ead4fb; color: #5a0d8a; }
+.gray   { background: #ede8e3; color: #5a4a3a; }
+.brown  { background: #f0e4d4; color: #6b3e1a; }
