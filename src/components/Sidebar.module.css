@@ -1,5 +1,6 @@
+/* ── Desktop sidebar ─────────────────────────────────── */
 .sidebar {
-  width: 240px;
+  width: 230px;
   min-height: 100vh;
   background: #fff;
   border-right: 1px solid #e8e0d8;
@@ -7,104 +8,91 @@
   flex-direction: column;
   position: fixed;
   left: 0; top: 0;
-  z-index: 100;
+  z-index: 200;
+  transition: transform 0.25s ease;
 }
 
 .brand {
-  padding: 1.5rem 1.25rem 1rem;
+  padding: 1.25rem 1rem 0.875rem;
   border-bottom: 1px solid #f0e8e0;
 }
+.logo { display: flex; align-items: center; gap: 0.625rem; }
+.logoIcon { font-size: 1.6rem; }
+.logoName { font-size: 0.95rem; font-weight: 700; color: #2c1810; letter-spacing: -0.01em; }
+.logoPlan { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #c17f4a; }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.logoIcon {
-  font-size: 1.75rem;
-}
-
-.logoName {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #2c1810;
-  letter-spacing: -0.01em;
-}
-
-.logoPlan {
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #c17f4a;
-}
-
-.nav {
-  flex: 1;
-  padding: 1rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
+.nav { flex: 1; padding: 0.875rem 0.625rem; display: flex; flex-direction: column; gap: 0.2rem; }
 
 .navItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 0.875rem;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px; border: none;
+  background: transparent; cursor: pointer;
+  text-align: left; width: 100%;
   transition: background 0.15s;
-  color: #6b5040;
-  font-size: 0.875rem;
-  font-weight: 500;
+  color: #6b5040; font-size: 0.845rem; font-weight: 500;
 }
-
 .navItem:hover { background: #f7f0e8; }
-
-.navItem.active {
-  background: #f0e4d4;
-  color: #7a3d1a;
-  font-weight: 600;
-}
-
-.navIcon { font-size: 1.1rem; width: 1.4rem; text-align: center; }
+.navItem.active { background: #f0e4d4; color: #7a3d1a; font-weight: 700; }
+.navIcon { font-size: 1rem; width: 1.3rem; text-align: center; }
 .navLabel { flex: 1; }
 
-.bottom {
-  padding: 1rem;
-  border-top: 1px solid #f0e8e0;
-}
-
-.user {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
+.bottom { padding: 0.875rem; border-top: 1px solid #f0e8e0; }
+.user { display: flex; align-items: center; gap: 0.625rem; }
 
 .avatar {
-  width: 36px; height: 36px;
-  border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   background: linear-gradient(135deg, #c17f4a, #e8a060);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  color: #fff; font-size: 0.75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
-
 .userInfo { flex: 1; min-width: 0; }
-.userName  { font-size: 0.8rem; font-weight: 600; color: #2c1810; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.userEmail { font-size: 0.68rem; color: #9a8070; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.userName  { font-size: 0.78rem; font-weight: 600; color: #2c1810; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.userEmail { font-size: 0.65rem; color: #9a8070; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .signOut {
   background: none; border: none; cursor: pointer;
-  color: #9a8070; font-size: 1.1rem; padding: 0.25rem;
+  color: #9a8070; font-size: 1rem; padding: 0.2rem;
   border-radius: 6px; transition: color 0.15s;
 }
 .signOut:hover { color: #c17f4a; }
+
+/* ── Mobile topbar ───────────────────────────────────── */
+.topbar {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0; height: 52px;
+  background: #fff; border-bottom: 1px solid #e8e0d8;
+  align-items: center; gap: 0.875rem;
+  padding: 0 1rem; z-index: 300;
+}
+
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 20px; height: 2px;
+  background: #2c1810; border-radius: 2px;
+}
+
+.topbarBrand { display: flex; align-items: center; gap: 0.5rem; font-size: 1rem; font-weight: 700; color: #2c1810; }
+
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(44,24,16,0.35);
+  z-index: 199;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .topbar { display: flex; }
+  .overlay { display: block; }
+
+  .sidebar {
+    transform: translateX(-100%);
+    top: 0;
+    box-shadow: 4px 0 24px rgba(44,24,16,0.15);
+  }
+  .sidebar.open { transform: translateX(0); }
+}

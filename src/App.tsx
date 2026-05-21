@@ -3,13 +3,14 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Pedidos from './pages/Pedidos'
+import Produtos from './pages/Produtos'
 import Clientes from './pages/Clientes'
+import Atendimento from './pages/Atendimento'
 import Financeiro from './pages/Financeiro'
-import Automacoes from './pages/Automacoes'
 import Sidebar from './components/Sidebar'
 import styles from './App.module.css'
 
-type Page = 'dashboard' | 'pedidos' | 'clientes' | 'financeiro' | 'automacoes'
+type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro'
 
 function AppInner() {
   const { session, loading, signOut } = useAuth()
@@ -37,13 +38,14 @@ function AppInner() {
 
   return (
     <div className={styles.layout}>
-      <Sidebar current={page} onChange={setPage} onSignOut={handleSignOut} />
+      <Sidebar current={page} onChange={p => setPage(p as Page)} onSignOut={handleSignOut} />
       <main className={styles.main}>
-        {page === 'dashboard'  && <Dashboard  onToast={showToast} />}
-        {page === 'pedidos'    && <Pedidos    onToast={showToast} />}
-        {page === 'clientes'   && <Clientes   onToast={showToast} />}
-        {page === 'financeiro' && <Financeiro />}
-        {page === 'automacoes' && <Automacoes onToast={showToast} />}
+        {page === 'dashboard'   && <Dashboard   onToast={showToast} onNavigate={p => setPage(p as Page)} />}
+        {page === 'pedidos'     && <Pedidos     onToast={showToast} />}
+        {page === 'produtos'    && <Produtos    onToast={showToast} />}
+        {page === 'clientes'    && <Clientes    onToast={showToast} />}
+        {page === 'atendimento' && <Atendimento onToast={showToast} />}
+        {page === 'financeiro'  && <Financeiro />}
       </main>
       {toast && <div className={styles.toast}>{toast}</div>}
     </div>

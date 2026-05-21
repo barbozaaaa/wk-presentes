@@ -1,0 +1,22 @@
+.page { padding: 1.5rem 2rem; max-width: 800px; }
+.header { margin-bottom: 2rem; }
+.header h1 { font-size: 1.4rem; font-weight: 800; color: #2c1810; margin: 0 0 0.2rem; }
+.sub { color: #9a8070; font-size: 0.8rem; margin: 0; }
+
+.coming {
+  background: #fff; border: 1px solid #f0e8dc; border-radius: 20px;
+  padding: 3rem 2rem; text-align: center;
+}
+.comingIcon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+.coming h2  { font-size: 1.5rem; font-weight: 800; color: #2c1810; margin: 0 0 0.75rem; }
+.coming p   { font-size: 0.875rem; color: #9a8070; max-width: 420px; margin: 0 auto 0.5rem; line-height: 1.6; }
+
+.features {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 0.625rem; margin-top: 1.75rem;
+}
+.feature {
+  padding: 0.5rem 1rem;
+  background: #f0e4d4; color: #7a3d1a;
+  border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+}
