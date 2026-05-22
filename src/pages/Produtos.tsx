@@ -156,7 +156,7 @@ export default function Produtos({ onToast }: Props) {
               <div className={styles.cardImg}>
                 {p.image_url
                   ? <img src={p.image_url} alt={p.name} />
-                  : <span className={styles.cardImgPlaceholder}>🎁</span>
+                  : <span className={styles.cardImgPlaceholder}>🏷️</span>
                 }
                 <div className={styles.cardBadge}>
                   <Badge variant={STATUS_VARIANT[p.status]}>{STATUS_LABELS[p.status]}</Badge>

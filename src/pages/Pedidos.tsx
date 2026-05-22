@@ -21,7 +21,7 @@ const NEXT_ACTION: Partial<Record<OrderStatus, { label: string; next: OrderStatu
   criando_arte:          { label: 'Enviar p/ aprovação', next: 'aguardando_aprovacao', toast: '👁️ Enviado para aprovação!' },
   aguardando_aprovacao:  { label: 'Aprovar',          next: 'aprovado',             toast: '✅ Arte aprovada!' },
   aprovado:              { label: 'Iniciar produção', next: 'em_producao',           toast: '🔧 Produção iniciada!' },
-  em_producao:           { label: 'Marcar pronto',   next: 'pronto',                toast: '🎁 Pronto para entrega!' },
+  em_producao:           { label: 'Marcar pronto',   next: 'pronto',                toast: '✅ Pronto para entrega!' },
   pronto:                { label: 'Entregar',         next: 'entregue',              toast: '🚀 Pedido entregue!' },
 }
 

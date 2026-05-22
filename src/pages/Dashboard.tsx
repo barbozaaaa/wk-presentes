@@ -34,7 +34,7 @@ export default function Dashboard({ onToast, onNavigate }: Props) {
       {/* Header */}
       <div className={styles.header}>
         <div>
-          <h1>{greeting}, {businessName} 🎁</h1>
+          <h1>{greeting}, {businessName} 👋</h1>
           <p className={styles.sub}>
             <span className={styles.live}><span className={styles.liveDot}/>online</span>
             · {today}
@@ -200,7 +200,7 @@ export default function Dashboard({ onToast, onNavigate }: Props) {
                     <div className={styles.prodImg}>
                       {p.image_url
                         ? <img src={p.image_url} alt={p.name} />
-                        : <span>🎁</span>
+                        : <span>🏷️</span>
                       }
                     </div>
                     <div className={styles.prodInfo}>
