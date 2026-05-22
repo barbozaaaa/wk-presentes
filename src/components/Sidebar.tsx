@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useBusinessInfo } from '../hooks/useOrders'
 import styles from './Sidebar.module.css'
 
-type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro'
+type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro' | 'configuracoes'
 
 interface Props {
   current: Page
@@ -12,12 +12,13 @@ interface Props {
 }
 
 const nav: { id: Page; icon: string; label: string }[] = [
-  { id: 'dashboard',   icon: '🏠', label: 'Início'       },
-  { id: 'pedidos',     icon: '📦', label: 'Pedidos'      },
-  { id: 'produtos',    icon: '🏷️', label: 'Produtos'     },
-  { id: 'clientes',    icon: '👥', label: 'Clientes'     },
-  { id: 'atendimento', icon: '💬', label: 'Atendimento'  },
-  { id: 'financeiro',  icon: '💰', label: 'Financeiro'   },
+  { id: 'dashboard',     icon: '🏠', label: 'Início'         },
+  { id: 'pedidos',       icon: '📦', label: 'Pedidos'        },
+  { id: 'produtos',      icon: '🏷️', label: 'Produtos'       },
+  { id: 'clientes',      icon: '👥', label: 'Clientes'       },
+  { id: 'atendimento',   icon: '💬', label: 'Atendimento'    },
+  { id: 'financeiro',    icon: '💰', label: 'Financeiro'     },
+  { id: 'configuracoes', icon: '⚙️', label: 'Configurações'  },
 ]
 
 export default function Sidebar({ current, onChange, onSignOut }: Props) {

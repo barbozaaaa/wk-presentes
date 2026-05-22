@@ -25,7 +25,7 @@ export default function Login() {
         else setError('Erro de conexão. Verifique sua internet.')
       }
     } else {
-      if (!biz.trim()) { setError('Informe o nome do negócio.'); setLoading(false); return }
+      if (!biz.trim()) { setError('Informe o nome da empresa.'); setLoading(false); return }
       const { error } = await signUp(email, password, biz)
       if (error) {
         if (error.includes('already registered')) setError('Email já cadastrado. Faça login.')
@@ -63,7 +63,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className={styles.form}>
           {tab === 'cadastro' && (
             <div className={styles.field}>
-              <label className={styles.label}>Nome do negócio</label>
+              <label className={styles.label}>Nome da empresa</label>
               <input className={styles.input} placeholder="Ex: WK Canecas e Presentes"
                 value={biz} onChange={e => setBiz(e.target.value)} autoFocus />
             </div>

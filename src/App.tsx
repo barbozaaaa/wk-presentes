@@ -7,10 +7,11 @@ import Produtos from './pages/Produtos'
 import Clientes from './pages/Clientes'
 import Atendimento from './pages/Atendimento'
 import Financeiro from './pages/Financeiro'
+import Configuracoes from './pages/Configuracoes'
 import Sidebar from './components/Sidebar'
 import styles from './App.module.css'
 
-type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro'
+type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro' | 'configuracoes'
 
 function AppInner() {
   const { session, loading, signOut } = useAuth()
@@ -45,7 +46,8 @@ function AppInner() {
         {page === 'produtos'    && <Produtos    onToast={showToast} />}
         {page === 'clientes'    && <Clientes    onToast={showToast} />}
         {page === 'atendimento' && <Atendimento onToast={showToast} />}
-        {page === 'financeiro'  && <Financeiro />}
+        {page === 'financeiro'    && <Financeiro />}
+        {page === 'configuracoes' && <Configuracoes onToast={showToast} />}
       </main>
       {toast && <div className={styles.toast}>{toast}</div>}
     </div>
