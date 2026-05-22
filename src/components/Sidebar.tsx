@@ -39,8 +39,8 @@ export default function Sidebar({ current, onChange, onSignOut }: Props) {
           <span /><span /><span />
         </button>
         <div className={styles.topbarBrand}>
-          <span>🎁</span>
-          <span className={styles.topbarName}>WK Presentes</span>
+          <span>⚡</span>
+          <span className={styles.topbarName}>Flow</span>
         </div>
       </header>
 
@@ -51,9 +51,9 @@ export default function Sidebar({ current, onChange, onSignOut }: Props) {
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.open : ''}`}>
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <span className={styles.logoIcon}>🎁</span>
+            <span className={styles.logoIcon}>⚡</span>
             <div>
-              <div className={styles.logoName}>WK Presentes</div>
+              <div className={styles.logoName}>Flow</div>
               <div className={styles.logoPlan}>
                 {plan === 'pro' ? '⭐ Pro' : plan === 'basic' ? 'Basic' : 'Trial'}
               </div>

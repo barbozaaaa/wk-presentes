@@ -29,8 +29,8 @@ function AppInner() {
 
   if (loading) return (
     <div className={styles.splash}>
-      <span className={styles.splashIcon}>🎁</span>
-      <span className={styles.splashText}>WK Presentes</span>
+      <span className={styles.splashIcon}>⚡</span>
+      <span className={styles.splashText}>Flow</span>
     </div>
   )
 
