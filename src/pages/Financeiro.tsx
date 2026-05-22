@@ -1,3 +1,4 @@
+import { DollarSign, TrendingDown, TrendingUp, Target, BarChart2, Trophy, Printer } from 'lucide-react'
 import { useOrders } from '../hooks/useOrders'
 import styles from './Financeiro.module.css'
 
@@ -30,20 +31,27 @@ export default function Financeiro() {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <h1>Financeiro</h1>
-        <p className={styles.sub}>Receitas, custos e lucro</p>
+        <div>
+          <h1>Financeiro</h1>
+          <p className={styles.sub}>Receitas, custos e lucro</p>
+        </div>
+        <button className={styles.btnPrint} onClick={() => window.print()}>
+          <Printer size={15} /> Gerar PDF
+        </button>
       </div>
 
       <div className={styles.stats}>
-        <StatCard icon="💰" label="Receita este mês" value={`R$${currentMonth.revenue.toFixed(2)}`} color="#c17f4a" />
-        <StatCard icon="📉" label="Custos este mês"  value={`R$${currentMonth.cost.toFixed(2)}`}    color="#c05040" />
-        <StatCard icon="✨" label="Lucro este mês"   value={`R$${currentMonth.profit.toFixed(2)}`}  color="#1a7a44" />
-        <StatCard icon="🎯" label="Ticket médio"     value={`R$${avgTicket.toFixed(2)}`}            color="#1a6ab0" />
+        <StatCard icon={<DollarSign size={18} />} label="Receita este mês" value={`R$${currentMonth.revenue.toFixed(2)}`} color="#c17f4a" />
+        <StatCard icon={<TrendingDown size={18} />} label="Custos este mês"  value={`R$${currentMonth.cost.toFixed(2)}`}    color="#c05040" />
+        <StatCard icon={<TrendingUp size={18} />}  label="Lucro este mês"   value={`R$${currentMonth.profit.toFixed(2)}`}  color="#1a7a44" />
+        <StatCard icon={<Target size={18} />}      label="Ticket médio"     value={`R$${avgTicket.toFixed(2)}`}            color="#1a6ab0" />
       </div>
 
       <div className={styles.grid}>
         <div className={styles.card}>
-          <div className={styles.cardHead}>📊 Últimos 3 meses</div>
+          <div className={styles.cardHead}>
+            <BarChart2 size={16} /> Últimos 3 meses
+          </div>
           <table className={styles.table}>
             <thead>
               <tr><th>Mês</th><th>Pedidos</th><th>Receita</th><th>Custo</th><th>Lucro</th><th>Margem</th></tr>
@@ -64,7 +72,9 @@ export default function Financeiro() {
         </div>
 
         <div className={styles.card}>
-          <div className={styles.cardHead}>🏆 Produtos mais vendidos</div>
+          <div className={styles.cardHead}>
+            <Trophy size={16} /> Produtos mais vendidos
+          </div>
           <div className={styles.productList}>
             {(() => {
               const map: Record<string, number> = {}
@@ -115,10 +125,10 @@ export default function Financeiro() {
   )
 }
 
-function StatCard({ icon, label, value, color }: { icon: string; label: string; value: string; color: string }) {
+function StatCard({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string; color: string }) {
   return (
     <div className={styles.stat}>
-      <span className={styles.statIcon}>{icon}</span>
+      <div className={styles.statIcon} style={{ color, background: color + '18' }}>{icon}</div>
       <div className={styles.statValue} style={{ color }}>{value}</div>
       <div className={styles.statLabel}>{label}</div>
     </div>

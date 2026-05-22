@@ -1,21 +1,41 @@
-.page { padding: 2rem 2.5rem; max-width: 1100px; }
-.header { margin-bottom: 1.75rem; }
-.header h1 { font-size: 1.5rem; font-weight: 800; color: #2c1810; margin: 0 0 0.2rem; }
+.page { padding: 1.5rem 2rem 2rem; max-width: 1100px; }
+.header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 1.75rem; gap: 1rem;
+}
+.header h1 { font-size: 1.4rem; font-weight: 800; color: #2c1810; margin: 0 0 0.2rem; }
 .sub { color: #9a8070; font-size: 0.82rem; margin: 0; }
+
+.btnPrint {
+  display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  background: #fff; color: #5a3820;
+  border: 1.5px solid #e8ddd0; border-radius: 10px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+}
+.btnPrint:hover { border-color: #c17f4a; color: #7a3d1a; background: #fdf8f3; }
 
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
 
 .stat {
-  background: #fff; border: 1px solid #f0e8dc; border-radius: 14px; padding: 1.25rem;
+  background: #fff; border: 1px solid #f0e8dc; border-radius: 14px; padding: 1.1rem;
 }
-.statIcon  { font-size: 1.5rem; display: block; margin-bottom: 0.5rem; }
-.statValue { font-size: 1.5rem; font-weight: 800; line-height: 1.1; }
-.statLabel { font-size: 0.75rem; color: #6b5040; font-weight: 600; margin-top: 0.2rem; }
+.statIcon  {
+  width: 36px; height: 36px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.6rem;
+}
+.statValue { font-size: 1.4rem; font-weight: 800; line-height: 1.1; }
+.statLabel { font-size: 0.72rem; color: #6b5040; font-weight: 600; margin-top: 0.2rem; }
 
 .grid { display: grid; grid-template-columns: 1fr 300px; gap: 1.25rem; margin-bottom: 1.25rem; }
 
 .card { background: #fff; border: 1px solid #f0e8dc; border-radius: 16px; overflow: hidden; }
-.cardHead { padding: 1rem 1.25rem; border-bottom: 1px solid #f5ede4; font-size: 0.9rem; font-weight: 700; color: #2c1810; }
+.cardHead {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 1rem 1.25rem; border-bottom: 1px solid #f5ede4;
+  font-size: 0.875rem; font-weight: 700; color: #2c1810;
+}
 
 .table { width: 100%; border-collapse: collapse; }
 .table th {
@@ -49,7 +69,13 @@
 .divider { width: 1px; height: 40px; background: #f0e8dc; }
 
 @media (max-width: 900px) {
+  .page  { padding: 1rem; }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .grid  { grid-template-columns: 1fr; }
-  .totalCard { flex-wrap: wrap; }
+  .totalCard { flex-wrap: wrap; gap: 1rem; }
+}
+
+@media print {
+  .btnPrint { display: none; }
+  .page { padding: 0; }
 }

@@ -1,55 +1,55 @@
 import { useState } from 'react'
+import { Search, Plus, Trash2, Circle } from 'lucide-react'
 import { useOrders } from '../hooks/useOrders'
 import type { OrderStatus, OrderSource } from '../lib/database.types'
-import Badge from '../components/Badge'
 import styles from './Pedidos.module.css'
 
 interface Props { onToast: (msg: string) => void }
 
-const STATUS_FLOW: OrderStatus[] = [
-  'novo', 'criando_arte', 'aguardando_aprovacao', 'aprovado', 'em_producao', 'pronto', 'entregue'
+const STATUS_FLOW: (OrderStatus | 'todos')[] = [
+  'todos', 'pendente', 'em_producao', 'pronto', 'entregue', 'cancelado'
 ]
 
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  novo: 'Novo', criando_arte: 'Criando Arte', aguardando_aprovacao: 'Ag. Aprovação',
-  aprovado: 'Aprovado', em_producao: 'Em Produção', pronto: 'Pronto',
-  entregue: 'Entregue', cancelado: 'Cancelado',
+const STATUS_LABELS: Record<string, string> = {
+  todos: 'Todos',
+  pendente: 'Pendente',
+  em_producao: 'Em produção',
+  pronto: 'Pronto',
+  entregue: 'Entregue',
+  cancelado: 'Cancelado',
+}
+
+const STATUS_COLOR: Record<string, string> = {
+  pendente: '#d4961a', em_producao: '#7a3da0',
+  pronto: '#1a7a44', entregue: '#6b5040', cancelado: '#c05040',
 }
 
 const NEXT_ACTION: Partial<Record<OrderStatus, { label: string; next: OrderStatus; toast: string }>> = {
-  novo:                  { label: 'Criar arte',       next: 'criando_arte',         toast: '🎨 Arte iniciada!' },
-  criando_arte:          { label: 'Enviar p/ aprovação', next: 'aguardando_aprovacao', toast: '👁️ Enviado para aprovação!' },
-  aguardando_aprovacao:  { label: 'Aprovar',          next: 'aprovado',             toast: '✅ Arte aprovada!' },
-  aprovado:              { label: 'Iniciar produção', next: 'em_producao',           toast: '🔧 Produção iniciada!' },
-  em_producao:           { label: 'Marcar pronto',   next: 'pronto',                toast: '✅ Pronto para entrega!' },
-  pronto:                { label: 'Entregar',         next: 'entregue',              toast: '🚀 Pedido entregue!' },
+  pendente:    { label: 'Iniciar produção', next: 'em_producao', toast: '✓ Produção iniciada!' },
+  em_producao: { label: 'Marcar pronto',   next: 'pronto',      toast: '✓ Pedido pronto!' },
+  pronto:      { label: 'Entregar',         next: 'entregue',    toast: '✓ Pedido entregue!' },
 }
 
-function statusVariant(s: OrderStatus) {
-  const m: Record<OrderStatus, 'blue'|'purple'|'amber'|'green'|'brown'|'gray'|'red'> = {
-    novo: 'blue', criando_arte: 'purple', aguardando_aprovacao: 'amber',
-    aprovado: 'green', em_producao: 'brown', pronto: 'green', entregue: 'gray', cancelado: 'red'
-  }
-  return m[s]
-}
-
-const SOURCE_ICONS: Record<OrderSource, string> = {
-  whatsapp: '💬', instagram: '📸', presencial: '🏪', outro: '📋'
+const SOURCE_LABELS: Record<OrderSource, string> = {
+  whatsapp: 'WhatsApp', instagram: 'Instagram', presencial: 'Presencial', outro: 'Outro'
 }
 
 export default function Pedidos({ onToast }: Props) {
   const { orders, loading, updateStatus, createOrder, deleteOrder } = useOrders()
   const [filter, setFilter] = useState<OrderStatus | 'todos'>('todos')
+  const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
-  // form state
   const [form, setForm] = useState({
     customer_name: '', customer_phone: '', source: 'whatsapp' as OrderSource,
     produto: '', quantidade: '1', valor: '', custo: '', deadline: '', notes: '',
   })
 
-  const filtered = filter === 'todos' ? orders : orders.filter(o => o.status === filter)
+  const filtered = orders
+    .filter(o => filter === 'todos' || o.status === filter)
+    .filter(o => !search || o.customer_name.toLowerCase().includes(search.toLowerCase())
+      || (o.items?.[0]?.produto ?? '').toLowerCase().includes(search.toLowerCase()))
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault()
@@ -60,7 +60,7 @@ export default function Pedidos({ onToast }: Props) {
       customer_name: form.customer_name,
       customer_phone: form.customer_phone,
       source: form.source,
-      status: 'novo',
+      status: 'pendente',
       items: [{ produto: form.produto, quantidade: qty, valor_unitario: val }],
       total_value: qty * val,
       cost,
@@ -69,32 +69,48 @@ export default function Pedidos({ onToast }: Props) {
     })
     setShowModal(false)
     setForm({ customer_name: '', customer_phone: '', source: 'whatsapp', produto: '', quantidade: '1', valor: '', custo: '', deadline: '', notes: '' })
-    onToast('📦 Pedido criado com sucesso!')
+    onToast('✓ Pedido criado!')
   }
 
   return (
     <div className={styles.page}>
+
+      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1>Pedidos</h1>
-          <p className={styles.sub}>{orders.length} pedidos no total</p>
+          <p className={styles.sub}>{orders.length} pedido{orders.length !== 1 ? 's' : ''} no total</p>
         </div>
-        <button className={styles.btnPrimary} onClick={() => setShowModal(true)}>＋ Novo pedido</button>
+        <button className={styles.btnPrimary} onClick={() => setShowModal(true)}>
+          <Plus size={15} strokeWidth={2.5} /> Novo pedido
+        </button>
       </div>
 
-      {/* Status filter */}
-      <div className={styles.filters}>
-        <button className={`${styles.filter} ${filter === 'todos' ? styles.filterActive : ''}`}
-          onClick={() => setFilter('todos')}>Todos ({orders.length})</button>
-        {STATUS_FLOW.map(s => {
-          const count = orders.filter(o => o.status === s).length
-          return (
-            <button key={s} className={`${styles.filter} ${filter === s ? styles.filterActive : ''}`}
-              onClick={() => setFilter(s)}>
-              {STATUS_LABELS[s]} ({count})
-            </button>
-          )
-        })}
+      {/* Search + filter bar */}
+      <div className={styles.toolbar}>
+        <div className={styles.searchWrap}>
+          <Search size={14} className={styles.searchIcon} />
+          <input
+            className={styles.searchInput}
+            placeholder="Buscar por cliente ou produto..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+        <div className={styles.filters}>
+          {STATUS_FLOW.map(s => {
+            const count = s === 'todos' ? orders.length : orders.filter(o => o.status === s).length
+            return (
+              <button
+                key={s}
+                className={`${styles.filter} ${filter === s ? styles.filterActive : ''}`}
+                onClick={() => setFilter(s)}
+              >
+                {STATUS_LABELS[s]} <span className={styles.filterCount}>{count}</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Orders table */}
@@ -102,36 +118,68 @@ export default function Pedidos({ onToast }: Props) {
         {loading ? (
           <div className={styles.empty}>Carregando...</div>
         ) : filtered.length === 0 ? (
-          <div className={styles.empty}>Nenhum pedido{filter !== 'todos' ? ' nesse status' : ''} ainda.</div>
+          <div className={styles.empty}>
+            {search ? `Nenhum resultado para "${search}"` : 'Nenhum pedido nesse status ainda.'}
+          </div>
         ) : (
           <table className={styles.table}>
             <thead>
-              <tr><th>#</th><th>Cliente</th><th>Origem</th><th>Produto</th><th>Valor</th><th>Prazo</th><th>Status</th><th>Ações</th></tr>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Valor</th>
+                <th>Prazo</th>
+                <th>Origem</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
             </thead>
             <tbody>
-              {filtered.map((o, i) => {
-                const action = NEXT_ACTION[o.status]
+              {filtered.map((o) => {
+                const action = NEXT_ACTION[o.status as OrderStatus]
                 return (
                   <tr key={o.id}>
-                    <td className={styles.num}>{orders.length - i}</td>
+                    <td className={styles.num}>{orders.indexOf(o) + 1}</td>
                     <td>
                       <div className={styles.clientName}>{o.customer_name}</div>
                       <div className={styles.clientPhone}>{o.customer_phone}</div>
                     </td>
-                    <td className={styles.source}>{SOURCE_ICONS[o.source]} {o.source}</td>
-                    <td>{o.items?.[0]?.produto ?? '—'}</td>
+                    <td className={styles.productCell}>{o.items?.[0]?.produto ?? '—'}</td>
                     <td className={styles.value}>R${o.total_value?.toFixed(2)}</td>
-                    <td className={styles.deadline}>{o.deadline ? new Date(o.deadline).toLocaleDateString('pt-BR') : '—'}</td>
-                    <td><Badge variant={statusVariant(o.status)}>{STATUS_LABELS[o.status]}</Badge></td>
+                    <td className={styles.deadline}>
+                      {o.deadline ? new Date(o.deadline + 'T00:00:00').toLocaleDateString('pt-BR') : '—'}
+                    </td>
+                    <td className={styles.source}>{SOURCE_LABELS[o.source]}</td>
+                    <td>
+                      <span
+                        className={styles.statusBadge}
+                        style={{
+                          color: STATUS_COLOR[o.status] ?? '#6b5040',
+                          background: (STATUS_COLOR[o.status] ?? '#6b5040') + '18',
+                        }}
+                      >
+                        <Circle size={6} fill="currentColor" strokeWidth={0} />
+                        {STATUS_LABELS[o.status]}
+                      </span>
+                    </td>
                     <td>
                       <div className={styles.actions}>
                         {action && (
                           <button className={styles.btnSm} onClick={async () => {
                             await updateStatus(o.id, action.next)
                             onToast(action.toast)
-                          }}>{action.label}</button>
+                          }}>
+                            {action.label}
+                          </button>
                         )}
-                        <button className={styles.btnDanger} onClick={() => setConfirmDelete(o.id)}>🗑</button>
+                        <button
+                          className={styles.btnDanger}
+                          title="Excluir pedido"
+                          onClick={() => setConfirmDelete(o.id)}
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -153,7 +201,7 @@ export default function Pedidos({ onToast }: Props) {
             <form onSubmit={handleCreate} className={styles.form}>
               <div className={styles.row}>
                 <div className={styles.field}>
-                  <label>Nome do cliente</label>
+                  <label>Nome do cliente *</label>
                   <input required placeholder="Ex: Maria Silva"
                     value={form.customer_name} onChange={e => setForm(p => ({ ...p, customer_name: e.target.value }))} />
                 </div>
@@ -167,10 +215,10 @@ export default function Pedidos({ onToast }: Props) {
                 <div className={styles.field}>
                   <label>Origem do pedido</label>
                   <select value={form.source} onChange={e => setForm(p => ({ ...p, source: e.target.value as OrderSource }))}>
-                    <option value="whatsapp">💬 WhatsApp</option>
-                    <option value="instagram">📸 Instagram</option>
-                    <option value="presencial">🏪 Presencial</option>
-                    <option value="outro">📋 Outro</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="presencial">Presencial</option>
+                    <option value="outro">Outro</option>
                   </select>
                 </div>
                 <div className={styles.field}>
@@ -179,11 +227,11 @@ export default function Pedidos({ onToast }: Props) {
                 </div>
               </div>
               <div className={styles.field}>
-                <label>Produto / Descrição</label>
+                <label>Produto / Descrição *</label>
                 <input required placeholder="Ex: Caneca personalizada com foto + caixa"
                   value={form.produto} onChange={e => setForm(p => ({ ...p, produto: e.target.value }))} />
               </div>
-              <div className={styles.row}>
+              <div className={styles.rowTriple}>
                 <div className={styles.field}>
                   <label>Quantidade</label>
                   <input type="number" min="1" value={form.quantidade}
@@ -202,7 +250,7 @@ export default function Pedidos({ onToast }: Props) {
               </div>
               <div className={styles.field}>
                 <label>Observações</label>
-                <textarea placeholder="Detalhes da personalização, referencias de arte, etc."
+                <textarea placeholder="Detalhes da personalização, referências de arte, etc."
                   value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))} rows={3} />
               </div>
               <div className={styles.modalActions}>
@@ -224,7 +272,7 @@ export default function Pedidos({ onToast }: Props) {
               <button className={styles.btnDangerFull} onClick={async () => {
                 await deleteOrder(confirmDelete)
                 setConfirmDelete(null)
-                onToast('🗑️ Pedido excluído.')
+                onToast('Pedido excluído.')
               }}>Excluir</button>
             </div>
           </div>

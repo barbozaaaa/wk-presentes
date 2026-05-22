@@ -12,7 +12,7 @@ async function getBusinessId(userId: string): Promise<string | null> {
   return (data as any)?.id ?? null
 }
 
-// ─── ORDERS ────────────────────────────────────────────────────────────────
+// ─── ORDERS ──────────────────────────────────────────────
 
 export function useOrders() {
   const { session } = useAuth()
@@ -25,9 +25,7 @@ export function useOrders() {
     const bid = await getBusinessId(session.user.id)
     if (!bid) { setLoading(false); return }
     const { data } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('business_id', bid)
+      .from('orders').select('*').eq('business_id', bid)
       .order('created_at', { ascending: false })
     setOrders((data as any) ?? [])
     setLoading(false)
@@ -36,7 +34,8 @@ export function useOrders() {
   useEffect(() => { load() }, [session])
 
   async function updateStatus(id: string, status: OrderStatus) {
-    await supabase.from('orders').update({ status, updated_at: new Date().toISOString() } as any).eq('id', id)
+    await supabase.from('orders')
+      .update({ status, updated_at: new Date().toISOString() } as any).eq('id', id)
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o))
   }
 
@@ -45,11 +44,9 @@ export function useOrders() {
     const bid = await getBusinessId(session.user.id)
     if (!bid) return
     const now = new Date().toISOString()
-    const { data } = await supabase
-      .from('orders')
+    const { data } = await supabase.from('orders')
       .insert([{ ...order, business_id: bid, created_at: now, updated_at: now } as any])
-      .select()
-      .single()
+      .select().single()
     if (data) setOrders(prev => [data as Order, ...prev])
   }
 
@@ -61,7 +58,7 @@ export function useOrders() {
   return { orders, loading, updateStatus, createOrder, deleteOrder, reload: load }
 }
 
-// ─── CUSTOMERS ─────────────────────────────────────────────────────────────
+// ─── CUSTOMERS ───────────────────────────────────────────
 
 export function useCustomers() {
   const { session } = useAuth()
@@ -74,20 +71,37 @@ export function useCustomers() {
     const bid = await getBusinessId(session.user.id)
     if (!bid) { setLoading(false); return }
     const { data } = await supabase
-      .from('customers')
-      .select('*')
-      .eq('business_id', bid)
-      .order('name')
+      .from('customers').select('*').eq('business_id', bid).order('name')
     setCustomers((data as any) ?? [])
     setLoading(false)
   }
 
   useEffect(() => { load() }, [session])
 
-  return { customers, loading, reload: load }
+  async function createCustomer(c: { name: string; phone: string; email?: string; instagram?: string; notes?: string }) {
+    if (!session?.user) return
+    const bid = await getBusinessId(session.user.id)
+    if (!bid) return
+    const { data } = await supabase.from('customers')
+      .insert([{ ...c, business_id: bid, total_orders: 0, total_spent: 0 } as any])
+      .select().single()
+    if (data) setCustomers(prev => [...prev, data as Customer].sort((a, b) => a.name.localeCompare(b.name)))
+  }
+
+  async function updateCustomer(id: string, updates: Partial<Customer>) {
+    await supabase.from('customers').update(updates as any).eq('id', id)
+    setCustomers(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c))
+  }
+
+  async function deleteCustomer(id: string) {
+    await supabase.from('customers').delete().eq('id', id)
+    setCustomers(prev => prev.filter(c => c.id !== id))
+  }
+
+  return { customers, loading, createCustomer, updateCustomer, deleteCustomer, reload: load }
 }
 
-// ─── PRODUCTS ──────────────────────────────────────────────────────────────
+// ─── PRODUCTS ────────────────────────────────────────────
 
 export interface Product {
   id: string
@@ -115,31 +129,27 @@ export function useProducts() {
     const bid = await getBusinessId(session.user.id)
     if (!bid) { setLoading(false); return }
     const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('business_id', bid)
-      .order('name')
+      .from('products').select('*').eq('business_id', bid).order('name')
     setProducts((data as any) ?? [])
     setLoading(false)
   }
 
   useEffect(() => { load() }, [session])
 
-  async function createProduct(product: Omit<Product, 'id' | 'business_id' | 'created_at' | 'updated_at'>) {
+  async function createProduct(p: Omit<Product, 'id' | 'business_id' | 'created_at' | 'updated_at'>) {
     if (!session?.user) return
     const bid = await getBusinessId(session.user.id)
     if (!bid) return
     const now = new Date().toISOString()
-    const { data } = await supabase
-      .from('products')
-      .insert([{ ...product, business_id: bid, created_at: now, updated_at: now } as any])
-      .select()
-      .single()
+    const { data } = await supabase.from('products')
+      .insert([{ ...p, business_id: bid, created_at: now, updated_at: now } as any])
+      .select().single()
     if (data) setProducts(prev => [...prev, data as Product].sort((a, b) => a.name.localeCompare(b.name)))
   }
 
   async function updateProduct(id: string, updates: Partial<Product>) {
-    await supabase.from('products').update({ ...updates, updated_at: new Date().toISOString() } as any).eq('id', id)
+    await supabase.from('products')
+      .update({ ...updates, updated_at: new Date().toISOString() } as any).eq('id', id)
     setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p))
   }
 
@@ -151,23 +161,20 @@ export function useProducts() {
   return { products, loading, createProduct, updateProduct, deleteProduct, reload: load }
 }
 
-// ─── BUSINESS INFO ─────────────────────────────────────────────────────────
+// ─── BUSINESS INFO ────────────────────────────────────────
 
 export function useBusinessInfo() {
   const { session } = useAuth()
-  const [name, setName] = useState('WK Presentes')
+  const [name, setName] = useState('Meu Negócio')
   const [plan, setPlan] = useState('trial')
 
   useEffect(() => {
     async function load() {
       if (!session?.user) return
       const { data } = await supabase
-        .from('businesses')
-        .select('name, plan')
-        .eq('owner_id', session.user.id)
-        .single()
+        .from('businesses').select('name, plan').eq('owner_id', session.user.id).single()
       if (data) {
-        setName((data as any).name ?? 'WK Presentes')
+        setName((data as any).name ?? 'Meu Negócio')
         setPlan((data as any).plan ?? 'trial')
       }
     }

@@ -19,15 +19,7 @@ export interface Customer {
   created_at: string
 }
 
-export type OrderStatus =
-  | 'novo'
-  | 'criando_arte'
-  | 'aguardando_aprovacao'
-  | 'aprovado'
-  | 'em_producao'
-  | 'pronto'
-  | 'entregue'
-  | 'cancelado'
+export type OrderStatus = 'pendente' | 'em_producao' | 'pronto' | 'entregue' | 'cancelado'
 
 export type OrderSource = 'whatsapp' | 'instagram' | 'presencial' | 'outro'
 
@@ -51,15 +43,6 @@ export interface Order {
   cost: number
   notes?: string
   deadline?: string
-  art_url?: string
   created_at: string
   updated_at: string
-}
-
-export interface FinancialSummary {
-  month: string
-  revenue: number
-  cost: number
-  profit: number
-  orders_count: number
 }
