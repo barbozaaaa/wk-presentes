@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Search, Plus, Tag, AlertTriangle, Layers } from 'lucide-react'
 import { useProducts, type Product } from '../hooks/useOrders'
 import Badge from '../components/Badge'
 import styles from './Produtos.module.css'
@@ -12,12 +13,8 @@ const CATEGORIAS = [
   'Maternidade', 'Lembranças', 'Outros'
 ]
 
-const STATUS_LABELS: Record<Status, string> = {
-  ativo: 'Ativo', inativo: 'Inativo', sem_estoque: 'Sem estoque'
-}
-const STATUS_VARIANT: Record<Status, 'green' | 'gray' | 'amber'> = {
-  ativo: 'green', inativo: 'gray', sem_estoque: 'amber'
-}
+const STATUS_LABELS: Record<Status, string> = { ativo: 'Ativo', inativo: 'Inativo', sem_estoque: 'Sem estoque' }
+const STATUS_VARIANT: Record<Status, 'green' | 'gray' | 'amber'> = { ativo: 'green', inativo: 'gray', sem_estoque: 'amber' }
 
 const EMPTY_FORM = {
   name: '', description: '', price: '', cost: '',
@@ -26,12 +23,12 @@ const EMPTY_FORM = {
 
 export default function Produtos({ onToast }: Props) {
   const { products, loading, createProduct, updateProduct, deleteProduct } = useProducts()
-  const [search, setSearch]       = useState('')
-  const [catFilter, setCatFilter] = useState('Todos')
-  const [showModal, setShowModal] = useState(false)
-  const [editing, setEditing]     = useState<Product | null>(null)
+  const [search, setSearch]         = useState('')
+  const [catFilter, setCatFilter]   = useState('Todos')
+  const [showModal, setShowModal]   = useState(false)
+  const [editing, setEditing]       = useState<Product | null>(null)
   const [confirmDel, setConfirmDel] = useState<string | null>(null)
-  const [form, setForm]           = useState(EMPTY_FORM)
+  const [form, setForm]             = useState(EMPTY_FORM)
   const f = (k: keyof typeof EMPTY_FORM, v: string) => setForm(p => ({ ...p, [k]: v }))
 
   const categories = ['Todos', ...CATEGORIAS]
@@ -42,12 +39,21 @@ export default function Produtos({ onToast }: Props) {
     return matchSearch && matchCat
   })
 
-  function openCreate() {
-    setEditing(null)
-    setForm(EMPTY_FORM)
-    setShowModal(true)
-  }
+  // Sidebar data
+  const categoryBreakdown = CATEGORIAS.map(cat => ({
+    name: cat, count: products.filter(p => p.category === cat).length
+  })).filter(c => c.count > 0).sort((a, b) => b.count - a.count)
 
+  const semEstoque = products.filter(p => p.status === 'sem_estoque')
+  const inativos   = products.filter(p => p.status === 'inativo')
+  const activeProds = products.filter(p => p.status === 'ativo')
+  const avgMargin  = activeProds.length
+    ? activeProds.filter(p => p.cost > 0 && p.price > 0)
+        .reduce((s, p) => s + (p.price - p.cost) / p.price * 100, 0)
+      / (activeProds.filter(p => p.cost > 0 && p.price > 0).length || 1)
+    : 0
+
+  function openCreate() { setEditing(null); setForm(EMPTY_FORM); setShowModal(true) }
   function openEdit(p: Product) {
     setEditing(p)
     setForm({
@@ -62,143 +68,192 @@ export default function Produtos({ onToast }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const payload = {
-      name: form.name.trim(),
-      description: form.description.trim() || undefined,
-      price: parseFloat(form.price) || 0,
-      cost: parseFloat(form.cost) || 0,
-      category: form.category,
-      image_url: form.image_url.trim() || undefined,
-      stock: parseInt(form.stock) || 0,
-      status: form.status,
+      name: form.name.trim(), description: form.description.trim() || undefined,
+      price: parseFloat(form.price) || 0, cost: parseFloat(form.cost) || 0,
+      category: form.category, image_url: form.image_url.trim() || undefined,
+      stock: parseInt(form.stock) || 0, status: form.status,
     }
-    if (editing) {
-      await updateProduct(editing.id, payload)
-      onToast('✏️ Produto atualizado!')
-    } else {
-      await createProduct(payload)
-      onToast('✅ Produto cadastrado!')
-    }
+    if (editing) { await updateProduct(editing.id, payload); onToast('✓ Produto atualizado!') }
+    else         { await createProduct(payload);              onToast('✓ Produto cadastrado!') }
     setShowModal(false)
   }
 
-  const activeCount   = products.filter(p => p.status === 'ativo').length
-  const inactiveCount = products.filter(p => p.status === 'inativo').length
-  const noStockCount  = products.filter(p => p.status === 'sem_estoque').length
-
   return (
     <div className={styles.page}>
+
       {/* Header */}
       <div className={styles.header}>
         <div>
           <h1>Produtos</h1>
-          <p className={styles.sub}>{products.length} cadastrados · {activeCount} ativos</p>
+          <p className={styles.sub}>{products.length} cadastrados · {activeProds.length} ativos</p>
         </div>
-        <button className={styles.btnPrimary} onClick={openCreate}>＋ Novo produto</button>
-      </div>
-
-      {/* Summary */}
-      <div className={styles.summary}>
-        <div className={styles.sumCard}>
-          <span className={styles.sumIcon}>✅</span>
-          <span className={styles.sumVal}>{activeCount}</span>
-          <span className={styles.sumLabel}>Ativos</span>
-        </div>
-        <div className={styles.sumCard}>
-          <span className={styles.sumIcon}>⚠️</span>
-          <span className={styles.sumVal}>{noStockCount}</span>
-          <span className={styles.sumLabel}>Sem estoque</span>
-        </div>
-        <div className={styles.sumCard}>
-          <span className={styles.sumIcon}>🔴</span>
-          <span className={styles.sumVal}>{inactiveCount}</span>
-          <span className={styles.sumLabel}>Inativos</span>
-        </div>
-        <div className={styles.sumCard}>
-          <span className={styles.sumIcon}>🏷️</span>
-          <span className={styles.sumVal}>{products.length}</span>
-          <span className={styles.sumLabel}>Total</span>
-        </div>
+        <button className={styles.btnPrimary} onClick={openCreate}>
+          <Plus size={15} strokeWidth={2.5} /> Novo produto
+        </button>
       </div>
 
       {/* Filters */}
-      <div className={styles.filters}>
-        <input
-          className={styles.search}
-          placeholder="🔍 Buscar produto..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
+      <div className={styles.toolbar}>
+        <div className={styles.searchWrap}>
+          <Search size={14} className={styles.searchIcon} />
+          <input className={styles.searchInput} placeholder="Buscar produto..."
+            value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
         <div className={styles.cats}>
           {categories.map(c => (
-            <button
-              key={c}
+            <button key={c}
               className={`${styles.cat} ${catFilter === c ? styles.catActive : ''}`}
-              onClick={() => setCatFilter(c)}
-            >{c}</button>
+              onClick={() => setCatFilter(c)}>
+              {c}
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Products grid */}
-      {loading ? (
-        <div className={styles.emptyFull}>Carregando produtos...</div>
-      ) : filtered.length === 0 ? (
-        <div className={styles.emptyFull}>
-          {products.length === 0
-            ? '🏷️ Nenhum produto cadastrado. Clique em "+ Novo produto" para começar!'
-            : '🔍 Nenhum produto encontrado com esse filtro.'
-          }
+      {/* Two-column */}
+      <div className={styles.contentGrid}>
+
+        {/* Product grid */}
+        <div>
+          {loading ? (
+            <div className={styles.emptyFull}>Carregando produtos...</div>
+          ) : filtered.length === 0 ? (
+            <div className={styles.emptyFull}>
+              {products.length === 0 ? 'Nenhum produto cadastrado. Clique em "+ Novo produto" para começar!' : 'Nenhum produto encontrado com esse filtro.'}
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {filtered.map(p => (
+                <div key={p.id} className={`${styles.card} ${p.status !== 'ativo' ? styles.cardDim : ''}`}>
+                  <div className={styles.cardImg}>
+                    {p.image_url
+                      ? <img src={p.image_url} alt={p.name} />
+                      : <Tag size={28} color="#c8b8a8" strokeWidth={1.5} />
+                    }
+                    <div className={styles.cardBadge}>
+                      <Badge variant={STATUS_VARIANT[p.status]}>{STATUS_LABELS[p.status]}</Badge>
+                    </div>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <div className={styles.cardCat}>{p.category}</div>
+                    <div className={styles.cardName}>{p.name}</div>
+                    {p.description && <div className={styles.cardDesc}>{p.description}</div>}
+                    <div className={styles.cardFooter}>
+                      <div className={styles.cardPrices}>
+                        <span className={styles.cardPrice}>R${p.price.toFixed(2)}</span>
+                        {p.cost > 0 && (
+                          <span className={styles.cardMargin}>
+                            {Math.round((p.price - p.cost) / p.price * 100)}% margem
+                          </span>
+                        )}
+                      </div>
+                      <div className={styles.cardStock}>{p.stock > 0 ? `${p.stock} un.` : 'Sob encomenda'}</div>
+                    </div>
+                    <div className={styles.cardActions}>
+                      <button className={styles.btnEdit} onClick={() => openEdit(p)}>Editar</button>
+                      <button className={styles.btnDel} onClick={() => setConfirmDel(p.id)}>Excluir</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className={styles.grid}>
-          {filtered.map(p => (
-            <div key={p.id} className={`${styles.card} ${p.status !== 'ativo' ? styles.cardDim : ''}`}>
-              <div className={styles.cardImg}>
-                {p.image_url
-                  ? <img src={p.image_url} alt={p.name} />
-                  : <span className={styles.cardImgPlaceholder}>🏷️</span>
-                }
-                <div className={styles.cardBadge}>
-                  <Badge variant={STATUS_VARIANT[p.status]}>{STATUS_LABELS[p.status]}</Badge>
-                </div>
+
+        {/* Right sidebar */}
+        <div className={styles.sidebar}>
+
+          {/* Summary stats */}
+          <div className={styles.sideCard}>
+            <div className={styles.sideCardHead}><Tag size={15} /> Resumo</div>
+            <div className={styles.statList}>
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Total de produtos</span>
+                <span className={styles.statVal}>{products.length}</span>
               </div>
-              <div className={styles.cardBody}>
-                <div className={styles.cardCat}>{p.category}</div>
-                <div className={styles.cardName}>{p.name}</div>
-                {p.description && <div className={styles.cardDesc}>{p.description}</div>}
-                <div className={styles.cardFooter}>
-                  <div className={styles.cardPrices}>
-                    <span className={styles.cardPrice}>R${p.price.toFixed(2)}</span>
-                    {p.cost > 0 && (
-                      <span className={styles.cardMargin}>
-                        {Math.round((p.price - p.cost) / p.price * 100)}% margem
-                      </span>
-                    )}
+              <div className={styles.statDivider} />
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Ativos</span>
+                <span className={styles.statVal} style={{ color: '#1a7a44' }}>{activeProds.length}</span>
+              </div>
+              <div className={styles.statDivider} />
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Sem estoque</span>
+                <span className={styles.statVal} style={{ color: '#d4961a' }}>{semEstoque.length}</span>
+              </div>
+              <div className={styles.statDivider} />
+              <div className={styles.statRow}>
+                <span className={styles.statLabel}>Inativos</span>
+                <span className={styles.statVal} style={{ color: '#c05040' }}>{inativos.length}</span>
+              </div>
+              {avgMargin > 0 && (
+                <>
+                  <div className={styles.statDivider} />
+                  <div className={styles.statRow}>
+                    <span className={styles.statLabel}>Margem média</span>
+                    <span className={styles.statVal} style={{ color: '#1a6ab0' }}>{Math.round(avgMargin)}%</span>
                   </div>
-                  <div className={styles.cardStock}>
-                    {p.stock > 0 ? `${p.stock} un.` : 'Sob encomenda'}
-                  </div>
-                </div>
-                <div className={styles.cardActions}>
-                  <button className={styles.btnEdit} onClick={() => openEdit(p)}>✏️ Editar</button>
-                  <button className={styles.btnDel}  onClick={() => setConfirmDel(p.id)}>🗑</button>
-                </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Category breakdown */}
+          {categoryBreakdown.length > 0 && (
+            <div className={styles.sideCard}>
+              <div className={styles.sideCardHead}><Layers size={15} /> Por categoria</div>
+              <div className={styles.catList}>
+                {categoryBreakdown.map(c => {
+                  const pct = Math.round(c.count / products.length * 100)
+                  return (
+                    <div key={c.name} className={styles.catRow}>
+                      <div className={styles.catTop}>
+                        <span className={styles.catName}>{c.name}</span>
+                        <span className={styles.catCount}>{c.count}</span>
+                      </div>
+                      <div className={styles.catBarBg}>
+                        <div className={styles.catBarFill} style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
-          ))}
+          )}
+
+          {/* Alerts */}
+          {(semEstoque.length > 0 || inativos.length > 0) && (
+            <div className={styles.sideCard}>
+              <div className={styles.sideCardHead}><AlertTriangle size={15} /> Atenção</div>
+              <div className={styles.alertList}>
+                {semEstoque.map(p => (
+                  <div key={p.id} className={`${styles.alertRow} ${styles.alertAmber}`}>
+                    <AlertTriangle size={12} />
+                    <span>{p.name} — sem estoque</span>
+                  </div>
+                ))}
+                {inativos.map(p => (
+                  <div key={p.id} className={`${styles.alertRow} ${styles.alertRed}`}>
+                    <AlertTriangle size={12} />
+                    <span>{p.name} — inativo</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
         </div>
-      )}
+      </div>
 
       {/* Modal create/edit */}
       {showModal && (
         <div className={styles.overlay} onClick={() => setShowModal(false)}>
           <div className={styles.modal} onClick={e => e.stopPropagation()}>
             <div className={styles.modalHead}>
-              <h2>{editing ? '✏️ Editar produto' : '➕ Novo produto'}</h2>
+              <h2>{editing ? 'Editar produto' : 'Novo produto'}</h2>
               <button className={styles.close} onClick={() => setShowModal(false)}>✕</button>
             </div>
             <form onSubmit={handleSubmit} className={styles.form}>
-              {/* Image preview */}
               {form.image_url && (
                 <div className={styles.imgPreview}>
                   <img src={form.image_url} alt="preview" />
@@ -242,9 +297,9 @@ export default function Produtos({ onToast }: Props) {
                 <div className={styles.field}>
                   <label>Status</label>
                   <select value={form.status} onChange={e => f('status', e.target.value as Status)}>
-                    <option value="ativo">✅ Ativo</option>
-                    <option value="sem_estoque">⚠️ Sem estoque</option>
-                    <option value="inativo">🔴 Inativo</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="sem_estoque">Sem estoque</option>
+                    <option value="inativo">Inativo</option>
                   </select>
                 </div>
               </div>
@@ -254,11 +309,9 @@ export default function Produtos({ onToast }: Props) {
                   value={form.image_url} onChange={e => f('image_url', e.target.value)} />
                 <span className={styles.hint}>Cole o link de uma imagem do produto</span>
               </div>
-              {/* Margin preview */}
               {parseFloat(form.price) > 0 && parseFloat(form.cost) > 0 && (
                 <div className={styles.marginPreview}>
-                  <span>💡 Margem de lucro: </span>
-                  <strong style={{ color: '#1a7a44' }}>
+                  Margem de lucro: <strong style={{ color: '#1a7a44' }}>
                     {Math.round((parseFloat(form.price) - parseFloat(form.cost)) / parseFloat(form.price) * 100)}%
                     (R${(parseFloat(form.price) - parseFloat(form.cost)).toFixed(2)})
                   </strong>
@@ -279,14 +332,13 @@ export default function Produtos({ onToast }: Props) {
       {confirmDel && (
         <div className={styles.overlay} onClick={() => setConfirmDel(null)}>
           <div className={styles.confirm} onClick={e => e.stopPropagation()}>
-            <span className={styles.confirmIcon}>🗑️</span>
             <p>Excluir este produto permanentemente?</p>
             <div className={styles.confirmActions}>
               <button className={styles.btnSecondary} onClick={() => setConfirmDel(null)}>Cancelar</button>
               <button className={styles.btnDanger} onClick={async () => {
                 await deleteProduct(confirmDel)
                 setConfirmDel(null)
-                onToast('🗑️ Produto excluído.')
+                onToast('Produto excluído.')
               }}>Excluir</button>
             </div>
           </div>

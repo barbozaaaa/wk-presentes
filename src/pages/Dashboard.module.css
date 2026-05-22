@@ -1,13 +1,11 @@
-.page { padding: 1.5rem 2rem 2rem; max-width: 1100px; }
+.page { padding: 1.5rem 2rem 2rem; max-width: 1200px; }
 
 /* ── Header ── */
 .header {
   display: flex; align-items: flex-start; justify-content: space-between;
   margin-bottom: 1.75rem; gap: 1rem;
 }
-.header h1 {
-  font-size: 1.45rem; font-weight: 800; color: #2c1810; margin: 0 0 0.3rem;
-}
+.header h1 { font-size: 1.45rem; font-weight: 800; color: #2c1810; margin: 0 0 0.3rem; }
 .date {
   display: flex; align-items: center; gap: 0.4rem;
   color: #9a8070; font-size: 0.8rem; margin: 0;
@@ -20,12 +18,10 @@
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
 .btnPrimary {
-  flex-shrink: 0;
-  padding: 0.55rem 1.1rem;
+  flex-shrink: 0; padding: 0.55rem 1.1rem;
   background: linear-gradient(135deg, #c17f4a, #a86030);
   color: #fff; border: none; border-radius: 10px;
-  font-size: 0.845rem; font-weight: 700; cursor: pointer;
-  transition: opacity 0.15s;
+  font-size: 0.845rem; font-weight: 700; cursor: pointer; transition: opacity 0.15s;
 }
 .btnPrimary:hover { opacity: 0.88; }
 
@@ -34,18 +30,14 @@
   background: #f0e4d4; color: #7a3d1a;
   border: 1px solid #e0d0bc; border-radius: 8px;
   font-size: 0.78rem; font-weight: 600; cursor: pointer;
-  transition: background 0.15s;
 }
 .btnSecondary:hover { background: #e8d4c0; }
 
 /* ── 4 stat cards ── */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.875rem;
-  margin-bottom: 1.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0.875rem; margin-bottom: 1.5rem;
 }
-
 .stat {
   background: #fff; border: 1px solid #f0e8dc; border-radius: 14px;
   padding: 1.1rem 1rem 0.9rem;
@@ -53,27 +45,24 @@
   cursor: pointer; text-align: left;
   transition: box-shadow 0.15s, transform 0.12s;
 }
-.stat:hover {
-  box-shadow: 0 4px 18px rgba(180,100,40,0.1);
-  transform: translateY(-2px);
-}
-
+.stat:hover { box-shadow: 0 4px 18px rgba(180,100,40,0.1); transform: translateY(-2px); }
 .statIcon {
   width: 34px; height: 34px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 0.15rem;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 0.15rem;
 }
-.statVal {
-  font-size: 1.65rem; font-weight: 800; line-height: 1;
-}
-.statLabel {
-  font-size: 0.72rem; font-weight: 600; color: #6b5040;
+.statVal   { font-size: 1.65rem; font-weight: 800; line-height: 1; }
+.statLabel { font-size: 0.72rem; font-weight: 600; color: #6b5040; }
+
+/* ── Two-column content ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.25rem;
+  align-items: start;
 }
 
-/* ── Recent orders card ── */
-.card {
-  background: #fff; border: 1px solid #f0e8dc; border-radius: 16px; overflow: hidden;
-}
+/* ── Orders card ── */
+.card { background: #fff; border: 1px solid #f0e8dc; border-radius: 16px; overflow: hidden; }
 .cardHead {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.875rem 1.25rem; border-bottom: 1px solid #f5ede4;
@@ -86,29 +75,20 @@
 }
 .cardLink:hover { text-decoration: underline; }
 
-.empty {
-  padding: 2.5rem; text-align: center; color: #9a8070; font-size: 0.82rem;
-}
+.empty { padding: 2.5rem; text-align: center; color: #9a8070; font-size: 0.82rem; }
 .emptyState {
   padding: 2.5rem; text-align: center;
   display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
 }
-.emptyState p {
-  font-size: 0.9rem; font-weight: 600; color: #2c1810; margin: 0;
-}
+.emptyState p { font-size: 0.9rem; font-weight: 600; color: #2c1810; margin: 0; }
 
-/* ── Order list ── */
 .orderList { display: flex; flex-direction: column; }
-
 .orderRow {
   display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid #faf5f0;
-  transition: background 0.1s;
+  padding: 0.75rem 1.25rem; border-bottom: 1px solid #faf5f0; transition: background 0.1s;
 }
 .orderRow:last-child { border-bottom: none; }
 .orderRow:hover { background: #fdf8f3; }
-
 .orderInfo { flex: 1; min-width: 0; }
 .orderName {
   font-size: 0.85rem; font-weight: 600; color: #2c1810;
@@ -118,37 +98,76 @@
   font-size: 0.72rem; color: #9a8070;
   display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-
-.orderValue {
-  font-size: 0.82rem; font-weight: 700; color: #1a7a44;
-  white-space: nowrap; min-width: 80px; text-align: right;
-}
-
+.orderValue  { font-size: 0.82rem; font-weight: 700; color: #1a7a44; white-space: nowrap; min-width: 74px; text-align: right; }
 .orderStatus {
   display: flex; align-items: center; gap: 0.3rem;
-  font-size: 0.72rem; font-weight: 600;
-  white-space: nowrap; min-width: 100px;
+  font-size: 0.72rem; font-weight: 600; white-space: nowrap; min-width: 98px;
 }
-
 .btnAdvance {
-  padding: 0.3rem 0.7rem;
+  padding: 0.3rem 0.65rem;
   background: #f0e4d4; color: #7a3d1a;
   border: 1px solid #e0d0bc; border-radius: 7px;
-  font-size: 0.7rem; font-weight: 600; cursor: pointer;
-  white-space: nowrap; flex-shrink: 0;
+  font-size: 0.68rem; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0;
   transition: background 0.15s;
 }
 .btnAdvance:hover { background: #e8d4c0; }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .stats { grid-template-columns: repeat(2, 1fr); }
+/* ── Right sidebar ── */
+.sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+.sideCard {
+  background: #fff; border: 1px solid #f0e8dc; border-radius: 16px; overflow: hidden;
 }
-@media (max-width: 600px) {
+.sideCardHead {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.875rem 1.1rem; border-bottom: 1px solid #f5ede4;
+  font-size: 0.845rem; font-weight: 700; color: #2c1810;
+}
+.sideEmpty { padding: 1.25rem 1.1rem; font-size: 0.78rem; color: #9a8070; margin: 0; }
+
+/* Financial mini */
+.finRows { padding: 0.5rem 0; }
+.finRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.55rem 1.1rem;
+}
+.finLabel { font-size: 0.78rem; color: #6b5040; font-weight: 500; }
+.finVal   { font-size: 0.9rem; font-weight: 700; }
+.finDivider { height: 1px; background: #f5ede4; margin: 0 1.1rem; }
+
+/* Deadlines */
+.deadlineList { padding: 0.5rem 0; }
+.deadlineRow {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 1.1rem; border-bottom: 1px solid #faf5f0;
+}
+.deadlineRow:last-child { border-bottom: none; }
+.deadlineInfo { flex: 1; min-width: 0; }
+.deadlineName {
+  font-size: 0.8rem; font-weight: 600; color: #2c1810;
+  display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.deadlineProd {
+  font-size: 0.68rem; color: #9a8070;
+  display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.deadlineBadge {
+  font-size: 0.68rem; font-weight: 800; padding: 0.2rem 0.5rem;
+  border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1000px) {
+  .contentGrid { grid-template-columns: 1fr; }
+  .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.625rem; }
+  .sidebar { grid-template-columns: 1fr; }
+}
+@media (max-width: 500px) {
   .page  { padding: 1rem; }
   .header h1 { font-size: 1.2rem; }
-  .stats { grid-template-columns: repeat(2, 1fr); gap: 0.625rem; }
-  .orderValue  { min-width: 60px; }
   .orderStatus { display: none; }
   .btnAdvance  { display: none; }
 }
