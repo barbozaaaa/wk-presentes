@@ -42,7 +42,7 @@ export default function Login() {
     <div className={styles.wrapper}>
       <div className={styles.card}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>⚡</span>
+          <div className={styles.logoIcon}>⚡</div>
           <div>
             <div className={styles.logoName}>Flow</div>
             <div className={styles.logoSub}>Painel de Gestão</div>
