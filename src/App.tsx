@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Pedidos from './pages/Pedidos'
@@ -17,6 +18,7 @@ function AppInner() {
   const { session, loading, signOut } = useAuth()
   const [page, setPage] = useState<Page>('dashboard')
   const [toast, setToast] = useState<string | null>(null)
+  const [showLanding, setShowLanding] = useState(true)
 
   function showToast(msg: string) {
     setToast(msg)
@@ -26,6 +28,7 @@ function AppInner() {
   async function handleSignOut() {
     await signOut()
     setPage('dashboard')
+    setShowLanding(true)
   }
 
   if (loading) return (
@@ -35,6 +38,7 @@ function AppInner() {
     </div>
   )
 
+  if (!session && showLanding) return <LandingPage onAcessar={() => setShowLanding(false)} />
   if (!session) return <Login />
 
   return (
