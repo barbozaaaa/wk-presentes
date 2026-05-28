@@ -1,0 +1,187 @@
+.page { padding: 1.5rem 2rem 3rem; max-width: 1100px; }
+
+/* ── Header ── */
+.header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;
+}
+.header h1 { font-size: 1.45rem; font-weight: 800; color: #2c1810; margin: 0 0 0.25rem; }
+.sub { font-size: 0.82rem; color: #9a8070; margin: 0; }
+
+.periodoTabs {
+  display: flex; gap: 4px;
+  background: #f4ece0; border-radius: 10px; padding: 4px;
+}
+.periodoTab {
+  padding: 0.42rem 0.85rem; border: none; border-radius: 7px;
+  background: transparent; cursor: pointer;
+  font-size: 0.8rem; font-weight: 500; color: #9a7a60;
+  transition: all 0.15s; font-family: inherit;
+}
+.periodoActive {
+  background: #fff; color: #2c1810; font-weight: 700;
+  box-shadow: 0 1px 6px rgba(180,100,40,0.14);
+}
+
+/* ── KPI cards ── */
+.kpis {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0.875rem; margin-bottom: 1.25rem;
+}
+.kpi {
+  background: #fff; border: 1px solid #f0e8dc; border-radius: 14px;
+  padding: 1.1rem 1rem 0.9rem;
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+.kpiIcon {
+  width: 34px; height: 34px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.25rem;
+}
+.kpiVal   { font-size: 1.45rem; font-weight: 800; line-height: 1.1; }
+.kpiLabel { font-size: 0.72rem; font-weight: 600; color: #6b5040; }
+.kpiSub   { font-size: 0.68rem; color: #b0a090; margin-top: 1px; }
+
+/* ── Destaque (melhor produto) ── */
+.destaque {
+  background: linear-gradient(120deg, #fffbf0 0%, #fff8e8 100%);
+  border: 1.5px solid #f0d890;
+  border-radius: 16px; padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;
+}
+.destaqueLeft { display: flex; flex-direction: column; gap: 0.35rem; }
+.destaqueBadge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #c8900a18; color: #c8900a;
+  font-size: 0.72rem; font-weight: 700;
+  padding: 0.25rem 0.65rem; border-radius: 99px;
+  border: 1px solid #c8900a30; width: fit-content;
+}
+.destaqueProd { font-size: 1.25rem; font-weight: 800; color: #2c1810; margin: 0; }
+.destaqueSub  { font-size: 0.8rem; color: #9a8070; margin: 0; }
+
+.destaqueMetrics {
+  display: flex; align-items: center; gap: 0; flex-shrink: 0;
+  background: #fff; border: 1px solid #f0e0b8;
+  border-radius: 12px; overflow: hidden;
+}
+.destaqueMet {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 0.75rem 1.25rem;
+}
+.destaqueMetVal   { font-size: 1.2rem; font-weight: 800; line-height: 1; }
+.destaqueMetLabel { font-size: 0.68rem; color: #9a8070; font-weight: 500; }
+.destaqueDivider  { width: 1px; height: 40px; background: #f0e0b8; }
+
+/* ── Card principal ── */
+.card {
+  background: #fff; border: 1px solid #f0e8dc;
+  border-radius: 16px; overflow: hidden; margin-bottom: 1rem;
+}
+.cardHead {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.75rem;
+  padding: 0.875rem 1.25rem; border-bottom: 1px solid #f5ede4;
+}
+.cardTitle {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.9rem; font-weight: 700; color: #2c1810;
+}
+
+.sortTabs { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
+.sortLabel { font-size: 0.72rem; color: #9a8070; margin-right: 0.25rem; }
+.sortBtn {
+  padding: 0.3rem 0.65rem; border: 1px solid #e8d8c8;
+  border-radius: 7px; background: transparent; cursor: pointer;
+  font-size: 0.75rem; font-weight: 500; color: #7a6050;
+  transition: all 0.15s; font-family: inherit;
+}
+.sortActive {
+  background: #2c1810; color: #fff; border-color: #2c1810; font-weight: 700;
+}
+
+/* ── Tabela ── */
+.table {
+  width: 100%; border-collapse: collapse; font-size: 0.82rem;
+}
+.table thead tr {
+  background: #faf5f0;
+  border-bottom: 1px solid #f0e8dc;
+}
+.table th {
+  padding: 0.6rem 1rem; text-align: left;
+  font-size: 0.7rem; font-weight: 700; color: #9a8070;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.thNum    { text-align: right; }
+.thRank   { width: 48px; text-align: center; }
+.thMargem { width: 140px; }
+
+.table tbody tr {
+  border-bottom: 1px solid #faf5f0;
+  transition: background 0.1s;
+}
+.table tbody tr:last-child { border-bottom: none; }
+.table tbody tr:hover { background: #fdf8f3; }
+.trTop { background: #fffaf4 !important; }
+.trTop:hover { background: #fff5ea !important; }
+
+.table td { padding: 0.7rem 1rem; }
+.tdRank  { text-align: center; font-size: 1rem; }
+.tdNum   { text-align: right; color: #4a3020; }
+.tdMargem{ }
+.tdNome  { }
+
+.nomeProd { font-weight: 600; color: #2c1810; display: block; }
+.noData   { font-size: 0.66rem; color: #c8a888; display: block; }
+.dash     { color: #c8b8a8; }
+
+/* Barra de margem */
+.margemWrap {
+  display: flex; flex-direction: column; gap: 3px; align-items: flex-end;
+}
+.barBg {
+  width: 100%; height: 4px; background: #f0e8dc;
+  border-radius: 99px; overflow: hidden;
+}
+.barFill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+
+/* Score pill */
+.scorePill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+  font-size: 0.75rem; font-weight: 700;
+}
+
+/* ── Empty state ── */
+.empty {
+  padding: 3rem; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.empty p    { font-size: 0.95rem; font-weight: 700; color: #2c1810; margin: 0; }
+.empty span { font-size: 0.8rem; color: #9a8070; }
+
+/* ── Legenda ── */
+.legend {
+  font-size: 0.72rem; color: #b0a090;
+  background: #faf5f0; border: 1px solid #f0e8dc;
+  border-radius: 10px; padding: 0.75rem 1rem;
+  line-height: 1.6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .table th, .table td { padding: 0.55rem 0.65rem; }
+  .thRank, .tdRank { display: none; }
+}
+@media (max-width: 600px) {
+  .page { padding: 1rem; }
+  .kpis { grid-template-columns: repeat(2, 1fr); gap: 0.625rem; }
+  .destaque { flex-direction: column; }
+  .destaqueMetrics { width: 100%; justify-content: center; }
+  .header { flex-direction: column; }
+}

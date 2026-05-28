@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useBusinessInfo } from '../hooks/useOrders'
 import styles from './Sidebar.module.css'
 
-type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro' | 'configuracoes'
+type Page = 'dashboard' | 'pedidos' | 'produtos' | 'clientes' | 'atendimento' | 'financeiro' | 'analise' | 'configuracoes'
 
 interface Props {
   current: Page
@@ -18,6 +18,7 @@ const nav: { id: Page; icon: string; label: string }[] = [
   { id: 'clientes',      icon: '👥', label: 'Clientes'       },
   { id: 'atendimento',   icon: '💬', label: 'Atendimento'    },
   { id: 'financeiro',    icon: '💰', label: 'Financeiro'     },
+  { id: 'analise',       icon: '📊', label: 'Análise'        },
   { id: 'configuracoes', icon: '⚙️', label: 'Configurações'  },
 ]
 
