@@ -1,4 +1,5 @@
-import { ShoppingBag, Clock, Tag, Users, ArrowRight, Circle, CalendarClock, TrendingUp } from 'lucide-react'
+import { useMemo } from 'react'
+import { ShoppingBag, Clock, Tag, Users, ArrowRight, Circle, CalendarClock, TrendingUp, BarChart2, Timer } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useOrders, useProducts, useCustomers } from '../hooks/useOrders'
 import styles from './Dashboard.module.css'
@@ -13,6 +14,9 @@ const STATUS_COLOR: Record<string, string> = {
   pendente: '#d4961a', em_producao: '#7a3da0',
   pronto: '#1a7a44', entregue: '#6b5040', cancelado: '#c05040',
 }
+
+const RANK_COLORS = ['#c8900a', '#7a8a9a', '#a0644a']
+const RANK_LABEL  = ['1º', '2º', '3º', '4º', '5º', '6º']
 
 export default function Dashboard({ onToast, onNavigate }: Props) {
   const { session } = useAuth()
@@ -39,12 +43,49 @@ export default function Dashboard({ onToast, onNavigate }: Props) {
   const now7 = new Date(); now7.setDate(now7.getDate() + 7)
   const upcoming = orders
     .filter(o => o.deadline && !['entregue', 'cancelado'].includes(o.status))
-    .filter(o => {
-      const d = new Date(o.deadline! + 'T00:00:00')
-      return d <= now7
-    })
+    .filter(o => new Date(o.deadline! + 'T00:00:00') <= now7)
     .sort((a, b) => a.deadline!.localeCompare(b.deadline!))
     .slice(0, 6)
+
+  // ── Análise por família de produto ──────────────────────
+  const productStats = useMemo(() => {
+    type Acc = {
+      count: number
+      completedCount: number
+      totalDays: number
+      totalRevenue: number
+      totalCost: number
+    }
+    const map: Record<string, Acc> = {}
+
+    for (const o of orders.filter(o => o.status !== 'cancelado')) {
+      const key = (o.items?.[0] as any)?.produto as string | undefined
+      if (!key) continue
+      if (!map[key]) map[key] = { count: 0, completedCount: 0, totalDays: 0, totalRevenue: 0, totalCost: 0 }
+      const m = map[key]
+      m.count++
+      m.totalRevenue += o.total_value ?? 0
+      m.totalCost    += o.cost ?? 0
+
+      if (o.status === 'entregue' && o.created_at && o.updated_at) {
+        const days = (new Date(o.updated_at).getTime() - new Date(o.created_at).getTime()) / 86400000
+        if (days >= 0) { m.completedCount++; m.totalDays += days }
+      }
+    }
+
+    return Object.entries(map)
+      .map(([name, d]) => {
+        const avgDays  = d.completedCount > 0 ? d.totalDays / d.completedCount : null
+        const margin   = d.totalRevenue > 0 ? ((d.totalRevenue - d.totalCost) / d.totalRevenue) * 100 : 0
+        const avgRev   = d.totalRevenue / d.count
+        // Score: margem alta + tempo baixo = melhor
+        const penalty  = avgDays !== null ? Math.max(avgDays, 0.5) : 10
+        const score    = (margin / penalty) * Math.log(d.count + 1)
+        return { name, count: d.count, avgDays, margin, avgRev, score }
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+  }, [orders])
 
   const name    = (session?.user?.user_metadata?.business_name as string) ?? 'você'
   const hour    = new Date().getHours()
@@ -188,18 +229,88 @@ export default function Dashboard({ onToast, onNavigate }: Props) {
                         <span className={styles.deadlineName}>{o.customer_name}</span>
                         <span className={styles.deadlineProd}>{o.items?.[0]?.produto ?? '—'}</span>
                       </div>
-                      <span
-                        className={styles.deadlineBadge}
-                        style={{
-                          background: isToday ? '#fdecea' : isUrgent ? '#fff8e8' : '#f0fdf4',
-                          color: isToday ? '#c05040' : isUrgent ? '#d4961a' : '#1a7a44',
-                        }}
-                      >
+                      <span className={styles.deadlineBadge} style={{
+                        background: isToday ? '#fdecea' : isUrgent ? '#fff8e8' : '#f0fdf4',
+                        color:      isToday ? '#c05040' : isUrgent ? '#d4961a' : '#1a7a44',
+                      }}>
                         {isToday ? 'Hoje!' : diff === 1 ? 'Amanhã' : `${diff}d`}
                       </span>
                     </div>
                   )
                 })}
+              </div>
+            )}
+          </div>
+
+          {/* ── Análise por Produto ── */}
+          <div className={styles.sideCard}>
+            <div className={styles.sideCardHead}>
+              <BarChart2 size={15} />
+              <span>Análise por produto</span>
+            </div>
+
+            {productStats.length === 0 ? (
+              <p className={styles.sideEmpty}>
+                Dados disponíveis após pedidos entregues
+              </p>
+            ) : (
+              <div className={styles.analysisList}>
+                {/* Cabeçalho da tabela */}
+                <div className={styles.analysisHeader}>
+                  <span className={styles.ahRank}>#</span>
+                  <span className={styles.ahName}>Produto</span>
+                  <span className={styles.ahTime}>
+                    <Timer size={11} /> Tempo
+                  </span>
+                  <span className={styles.ahMargin}>Margem</span>
+                </div>
+
+                {productStats.map((p, i) => {
+                  const margin = p.margin
+                  const marginColor = margin >= 50 ? '#1a7a44' : margin >= 30 ? '#d4961a' : '#c05040'
+                  const rankColor = RANK_COLORS[i] ?? '#6b5040'
+                  const timeStr = p.avgDays !== null
+                    ? p.avgDays < 1
+                      ? '< 1d'
+                      : `${p.avgDays.toFixed(1)}d`
+                    : '—'
+
+                  return (
+                    <div key={p.name} className={`${styles.analysisRow} ${i === 0 ? styles.analysisTop : ''}`}>
+                      {/* Rank */}
+                      <span className={styles.analysisRank} style={{ color: rankColor }}>
+                        {RANK_LABEL[i]}
+                      </span>
+
+                      {/* Nome + qtd pedidos */}
+                      <div className={styles.analysisName}>
+                        <span className={styles.anProd}>{p.name}</span>
+                        <span className={styles.anCount}>{p.count} pedido{p.count !== 1 ? 's' : ''}</span>
+                      </div>
+
+                      {/* Tempo médio */}
+                      <span className={styles.analysisTime}>{timeStr}</span>
+
+                      {/* Margem com barra */}
+                      <div className={styles.analysisMargin}>
+                        <span style={{ color: marginColor, fontWeight: 700 }}>
+                          {margin.toFixed(0)}%
+                        </span>
+                        <div className={styles.marginBar}>
+                          <div
+                            className={styles.marginFill}
+                            style={{ width: `${Math.min(margin, 100)}%`, background: marginColor }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* Legenda */}
+                <div className={styles.analysisLegend}>
+                  Ordenado por margem ÷ tempo × volume de pedidos
+                </div>
               </div>
             )}
           </div>
