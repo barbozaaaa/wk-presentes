@@ -9,15 +9,13 @@
 
 html, body {
   margin: 0;
-  height: 100%;
+  padding: 0;
   background: #faf5f0;
   color: #2c1810;
 }
 
 #root {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh;
 }
 
 h1, h2, h3 { margin: 0; }

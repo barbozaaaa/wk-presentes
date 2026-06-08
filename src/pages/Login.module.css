@@ -1,8 +1,10 @@
 /* ── Layout geral — split screen ────────────────────────────────────────── */
 .page {
   display: flex;
-  flex: 1;
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   font-family: 'Inter', sans-serif;
 }
 
@@ -11,7 +13,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 .left {
   flex: 1.1;
-  min-height: 100vh;
+  overflow-y: auto;
   background:
     radial-gradient(ellipse at 15% 50%, #5c2a0e40 0%, transparent 60%),
     radial-gradient(ellipse at 85% 10%, #8b4a1820 0%, transparent 50%),
@@ -168,7 +170,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 .right {
   flex: 0.9;
-  min-height: 100vh;
+  overflow-y: auto;
   background: #faf3eb;
   display: flex;
   align-items: center;
@@ -376,8 +378,8 @@
 
 /* ── Responsivo ──────────────────────────────────────────────────────────── */
 @media (max-width: 860px) {
-  .page     { flex-direction: column; }
-  .left     { padding: 48px 32px; flex: none; }
-  .right    { padding: 40px 24px; flex: none; }
+  .page     { flex-direction: column; height: auto; min-height: 100vh; overflow: visible; }
+  .left     { padding: 48px 32px; flex: none; overflow: visible; }
+  .right    { padding: 40px 24px; flex: none; overflow: visible; }
   .headline { font-size: 32px; }
 }
