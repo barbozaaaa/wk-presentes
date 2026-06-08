@@ -1,6 +1,7 @@
 /* ── Layout geral — split screen ────────────────────────────────────────── */
 .page {
   display: flex;
+  flex: 1;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
@@ -10,6 +11,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 .left {
   flex: 1.1;
+  min-height: 100vh;
   background:
     radial-gradient(ellipse at 15% 50%, #5c2a0e40 0%, transparent 60%),
     radial-gradient(ellipse at 85% 10%, #8b4a1820 0%, transparent 50%),
@@ -166,6 +168,7 @@
 ══════════════════════════════════════════════════════════════════════════ */
 .right {
   flex: 0.9;
+  min-height: 100vh;
   background: #faf3eb;
   display: flex;
   align-items: center;
