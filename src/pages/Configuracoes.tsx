@@ -84,22 +84,26 @@ export default function Configuracoes({ onToast }: Props) {
     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null }
   }
 
-  async function checkStatus(name: string) {
+  async function checkStatus(name: string, duringQR = false) {
     try {
       const res = await fetch(`${EVOLUTION_URL}/instance/connectionState/${name}`, {
         headers: evoHeaders(),
       })
-      if (!res.ok) { setWaStatus('disconnected'); return }
+      if (!res.ok) {
+        if (!duringQR) setWaStatus('disconnected')
+        return
+      }
       const data = await res.json()
       const state: string = data?.instance?.state ?? data?.state ?? ''
       if (state === 'open') {
         setWaStatus('connected')
         stopPolling()
-      } else {
+      } else if (!duringQR) {
+        // Só seta disconnected se não estamos aguardando QR
         setWaStatus('disconnected')
       }
     } catch {
-      setWaStatus('disconnected')
+      if (!duringQR) setWaStatus('disconnected')
     }
   }
 
@@ -146,8 +150,8 @@ export default function Configuracoes({ onToast }: Props) {
         const qr = (data as any)?.qr_code
         if (qr) setQrCode(qr)
 
-        // Verifica se já conectou (para o polling quando conectar)
-        checkStatus(name)
+        // Verifica se já conectou (passa duringQR=true para não resetar o estado)
+        checkStatus(name, true)
       }, 3000)
 
     } catch {
