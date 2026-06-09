@@ -32,7 +32,7 @@ function AppInner() {
   if (loading) return (
     <div className={styles.splash}>
       <span className={styles.splashIcon}>⚡</span>
-      <span className={styles.splashText}>Flow</span>
+      <span className={styles.splashText}>Flow Evolution</span>
     </div>
   )
 

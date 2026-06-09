@@ -42,7 +42,7 @@ export default function Sidebar({ current, onChange, onSignOut }: Props) {
         </button>
         <div className={styles.topbarBrand}>
           <span>⚡</span>
-          <span className={styles.topbarName}>Flow</span>
+          <span className={styles.topbarName}>Flow Evolution</span>
         </div>
       </header>
 
@@ -55,7 +55,7 @@ export default function Sidebar({ current, onChange, onSignOut }: Props) {
           <div className={styles.logo}>
             <span className={styles.logoIcon}>⚡</span>
             <div>
-              <div className={styles.logoName}>Flow</div>
+              <div className={styles.logoName}>Flow Evolution</div>
               <div className={styles.logoPlan}>
                 {plan === 'pro' ? '⭐ Pro' : plan === 'basic' ? 'Basic' : 'Trial'}
               </div>

@@ -48,7 +48,7 @@ export default function Login() {
           <div className={styles.logo}>
             <div className={styles.logoIcon}>⚡</div>
             <div>
-              <span className={styles.logoName}>Flow</span>
+              <span className={styles.logoName}>Flow Evolution</span>
               <span className={styles.logoSub}>WK Presentes</span>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function Login() {
             <p className={styles.cardSub}>
               {tab === 'login'
                 ? 'Acesse o painel da sua loja'
-                : 'Comece a usar o Flow agora'}
+                : 'Comece a usar o Flow Evolution agora'}
             </p>
           </div>
 
@@ -182,7 +182,7 @@ export default function Login() {
             </button>
           </form>
 
-          <p className={styles.version}>Flow v2.0 · WK Presentes © 2025</p>
+          <p className={styles.version}>Flow Evolution · WK Presentes © 2025</p>
         </div>
       </div>
 
