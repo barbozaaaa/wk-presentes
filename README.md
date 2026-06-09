@@ -29,7 +29,8 @@ Sistema de gestão para pequenos negócios (SaaS multi-tenant) com bot de WhatsA
 - [x] Evolution API v1.8.2 hospedada no Railway (online ✅)
 - [x] Evolution API Manager acessível e autenticado
 - [x] Instância `flow-evolution` criada com integração Baileys
-- [x] Workflow do n8n importado (WhatsApp Bot)
+- [x] Webhook da instância configurado apontando para o n8n
+- [x] Workflow do n8n importado e nós atualizados (URLs, apikey Evolution, OpenAI key)
 
 ---
 
@@ -87,31 +88,50 @@ Converta em: https://base64.guru/converter/decode/image
 
 ---
 
-#### PASSO 4 — Ativar o workflow no n8n
+#### PASSO 4 — ✅ CONCLUÍDO — Nós do n8n atualizados
+Todos os nós "Enviar WhatsApp" foram atualizados com:
+- URL: `https://evolution-api-production-c20c.up.railway.app/message/sendText/flow-evolution`
+- Header apikey: `flowevolution2025secretkey`
+- OpenAI key: já configurada no nó "IA OpenAI"
+
+---
+
+#### PASSO 5 — Adicionar Supabase Service Key ← PRÓXIMO PASSO EM CASA
+
+1. Acesse https://supabase.com/dashboard → seu projeto
+2. Vá em **Settings → API**
+3. Copie o valor de **`service_role`** (secret key)
+4. No n8n, abra os nós **"Buscar Pedidos Supabase"** e **"Criar Pedido Supabase"**
+5. No header `apikey` e `Authorization`, substitua `SEU_SUPABASE_SERVICE_KEY` pela chave copiada
+
+---
+
+#### PASSO 6 — Atualizar Business ID no nó "Criar Pedido Supabase"
+
+1. Acesse https://supabase.com/dashboard → SQL Editor
+2. Execute: `SELECT id FROM businesses LIMIT 1;`
+3. Copie o UUID retornado
+4. No nó "Criar Pedido Supabase", substitua `SEU_BUSINESS_ID_AQUI` pelo UUID
+
+---
+
+#### PASSO 7 — Ativar o workflow no n8n
 1. Acesse app.n8n.cloud
 2. Abra o workflow **"WK Presentes - Bot WhatsApp"**
-3. Clique no toggle **Inactive → Active**
-4. A URL de produção (sem -test) será:
-   ```
-   https://barboza15.app.n8n.cloud/webhook/whatsapp-bot
-   ```
+3. Clique no toggle **Inactive → Active** (canto superior direito)
 
 ---
 
-#### PASSO 5 — Atualizar credenciais nos nós do n8n
-
-| Placeholder | Valor real |
-|---|---|
-| `SEU_SERVIDOR` | `evolution-api-production-c20c.up.railway.app` |
-| `SUA_EVOLUTION_API_KEY` | `flowevolution2025secretkey` |
-| `SEU_NOME_INSTANCIA` | `flow-evolution` |
-| `SUA_OPENAI_API_KEY` | Criar em platform.openai.com/api-keys |
-| `SEU_SUPABASE_SERVICE_KEY` | Supabase → Settings → API → service_role |
-| `SEU_BUSINESS_ID_AQUI` | Supabase SQL Editor → `SELECT id FROM businesses LIMIT 1` |
+#### PASSO 8 — Escanear QR Code e conectar o WhatsApp
+1. Acesse https://evolution-api-production-c20c.up.railway.app/manager
+2. Login: `flowevolution2025secretkey`
+3. Clique na instância **fluxo-evolução**
+4. Clique em **"Conectar"** → aparece o QR Code
+5. No celular da loja: WhatsApp → 3 pontinhos → Aparelhos conectados → Conectar aparelho → Escanear
 
 ---
 
-#### PASSO 6 — Testar o bot
+#### PASSO 9 — Testar o bot
 1. Mande "oi" para o número conectado
 2. Teste: "status do meu pedido", "quanto custa", "quero fazer um pedido"
 3. Qualquer outra mensagem → GPT-4o-mini responde automaticamente
