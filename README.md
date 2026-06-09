@@ -26,8 +26,9 @@ Sistema de gestão para pequenos negócios (SaaS multi-tenant) com bot de WhatsA
 - [x] Login com layout split-screen (apresentação do produto + formulário)
 - [x] Marca: **Flow Evolution** (SaaS genérico, desvinculado da WK Presentes)
 - [x] Multi-tenant: cada empresa cadastrada fica isolada no banco
-- [x] Evolution API hospedada no Railway (online)
-- [x] PostgreSQL conectado na Evolution API (Railway)
+- [x] Evolution API v1.8.2 hospedada no Railway (online ✅)
+- [x] Evolution API Manager acessível e autenticado
+- [x] Instância `flow-evolution` criada com integração Baileys
 - [x] Workflow do n8n importado (WhatsApp Bot)
 
 ---
@@ -62,38 +63,27 @@ Se não aparecer: acesse railway.app → projeto → evolution-api → verificar
 
 ---
 
-#### PASSO 2 — Criar instância do WhatsApp
-Use o Postman, Insomnia ou Thunder Client (extensão do VS Code):
-
-```
-POST https://evolution-api-production-c20c.up.railway.app/instance/create
-Headers:
-  apikey: flowevolution2025secretkey
-  Content-Type: application/json
-
-Body:
-{
-  "instanceName": "flow-evolution",
-  "integration": "WHATSAPP-BAILEYS",
-  "qrcode": true,
-  "webhookUrl": "https://barboza15.app.n8n.cloud/webhook/whatsapp-bot",
-  "webhookByEvents": false,
-  "webhookBase64": false,
-  "events": ["MESSAGES_UPSERT"]
-}
-```
+#### PASSO 2 — ✅ CONCLUÍDO — Instância criada
+A instância `flow-evolution` já foi criada no Manager com integração Baileys.
+Acesse o Manager em: https://evolution-api-production-c20c.up.railway.app/manager
+- **URL:** `https://evolution-api-production-c20c.up.railway.app`
+- **API Key:** `flowevolution2025secretkey`
 
 ---
 
 #### PASSO 3 — Pegar o QR Code e conectar o WhatsApp
+Abra o Manager → clique na instância **flow-evolution** → clique em **"Conectar"** → aparece o QR Code na tela.
+
+Escaneie com o WhatsApp do número da loja (abre o WhatsApp → 3 pontinhos → Aparelhos conectados → Conectar aparelho).
+
+**OU** via API:
 ```
 GET https://evolution-api-production-c20c.up.railway.app/instance/connect/flow-evolution
 Headers:
   apikey: flowevolution2025secretkey
 ```
 A resposta tem um campo `base64` com a imagem do QR Code.
-Converta em imagem em: https://base64.guru/converter/decode/image
-Escaneie com o WhatsApp do número da loja.
+Converta em: https://base64.guru/converter/decode/image
 
 ---
 
