@@ -78,7 +78,7 @@ export default function Sidebar({ current, onChange, onSignOut }: Props) {
 
         <div className={styles.bottom}>
           <div className={styles.user}>
-            <div className={styles.avatar}>{initials || 'WK'}</div>
+            <div className={styles.avatar}>{initials || 'FL'}</div>
             <div className={styles.userInfo}>
               <div className={styles.userName}>{name}</div>
               <div className={styles.userEmail}>{session?.user?.email}</div>

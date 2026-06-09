@@ -49,7 +49,7 @@ export default function Login() {
             <div className={styles.logoIcon}>⚡</div>
             <div>
               <span className={styles.logoName}>Flow Evolution</span>
-              <span className={styles.logoSub}>WK Presentes</span>
+              <span className={styles.logoSub}>Painel de Gestão</span>
             </div>
           </div>
 
@@ -60,7 +60,7 @@ export default function Login() {
           </h1>
 
           <p className={styles.sub}>
-            Do pedido ao financeiro — controle sua loja de presentes
+            Do pedido ao financeiro — gerencie seu negócio
             de forma simples, rápida e sem complicação.
           </p>
 
@@ -132,7 +132,7 @@ export default function Login() {
                 <label className={styles.label}>Nome da empresa</label>
                 <input
                   className={styles.input}
-                  placeholder="Ex: WK Canecas e Presentes"
+                  placeholder="Ex: Minha Loja de Presentes"
                   value={biz}
                   onChange={e => setBiz(e.target.value)}
                   autoFocus
@@ -182,7 +182,7 @@ export default function Login() {
             </button>
           </form>
 
-          <p className={styles.version}>Flow Evolution · WK Presentes © 2025</p>
+          <p className={styles.version}>Flow Evolution © 2025</p>
         </div>
       </div>
 

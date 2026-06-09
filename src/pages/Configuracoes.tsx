@@ -102,7 +102,7 @@ export default function Configuracoes({ onToast }: Props) {
               <div className={styles.field}>
                 <label>Nome da empresa</label>
                 <input
-                  placeholder="Ex: WK Canecas e Presentes"
+                  placeholder="Ex: Minha Loja"
                   value={config.name}
                   onChange={e => set('name', e.target.value)}
                 />
@@ -179,7 +179,7 @@ export default function Configuracoes({ onToast }: Props) {
         {tab === 'sistema' && (
           <div className={styles.section}>
             <div className={styles.sectionTitle}>Preferências do sistema</div>
-            <div className={styles.sectionDesc}>Controle como o Flow se comporta para você.</div>
+            <div className={styles.sectionDesc}>Controle como o Flow Evolution se comporta para você.</div>
 
             <div className={styles.fields}>
               <div className={styles.toggleRow}>

@@ -13,8 +13,8 @@ export default function LandingPage({ onAcessar }: Props) {
         <div className={styles.logo}>
           <div className={styles.logoIcon}>⚡</div>
           <div>
-            <span className={styles.logoName}>Flow</span>
-            <span className={styles.logoSub}>WK Presentes</span>
+            <span className={styles.logoName}>Flow Evolution</span>
+            <span className={styles.logoSub}>Painel de Gestão</span>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ export default function LandingPage({ onAcessar }: Props) {
           <h2 className={styles.cardTitle}>Conheça o painel</h2>
 
           <p className={styles.cardDesc}>
-            Explore todas as funcionalidades do Flow sem precisar de cadastro.
+            Explore todas as funcionalidades do Flow Evolution sem precisar de cadastro.
           </p>
           <p className={styles.cardNote}>Os dados ficam salvos no seu navegador.</p>
 
@@ -81,7 +81,7 @@ export default function LandingPage({ onAcessar }: Props) {
           </p>
         </div>
 
-        <span className={styles.version}>v2.0 · Flow © 2025</span>
+        <span className={styles.version}>v2.0 · Flow Evolution © 2025</span>
       </section>
     </div>
   )

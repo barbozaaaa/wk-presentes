@@ -99,7 +99,7 @@ export default function Automacoes({ onToast }: Props) {
         </div>
         <div className={styles.webhookHelp}>
           💡 No N8N: crie um workflow com gatilho <strong>Webhook</strong> → ação <strong>Send Email</strong>.
-          O sistema WK Presentes enviará os dados do pedido automaticamente.
+          O Flow Evolution enviará os dados do pedido automaticamente.
         </div>
       </div>
 
