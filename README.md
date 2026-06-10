@@ -14,8 +14,8 @@ Sistema de gestão para pequenos negócios (SaaS multi-tenant) com bot de atendi
 | Frontend | React + TypeScript + Vite |
 | Banco de dados | Supabase (PostgreSQL + RLS) |
 | Deploy | Vercel (auto-deploy via GitHub) |
-| Bot WhatsApp | Evolution API v1 + n8n Cloud |
-| Hosting APIs | Railway |
+| Bot WhatsApp | Evolution API v1 + Vercel Serverless Function |
+| Hosting Evolution API | Railway |
 
 ---
 
@@ -27,8 +27,8 @@ Sistema de gestão para pequenos negócios (SaaS multi-tenant) com bot de atendi
 - [x] Multi-tenant: cada empresa isolada no banco (RLS no Supabase)
 - [x] **Aba WhatsApp** nas Configurações: exibe status de conexão ao vivo
 - [x] **Evolution API v1.8.2** hospedada no Railway (`handsome-gratitude`) — WhatsApp **conectado**
-- [x] **Bot de atendimento** ativo no n8n Cloud (`barboza11.app.n8n.cloud`) — workflow ID `JnC9Obd9PPPMojQ3`
-- [x] Webhook da Evolution API apontando para o n8n (evento `MESSAGES_UPSERT`)
+- [x] **Bot de atendimento** rodando como **Vercel Function** (`/api/whatsapp-webhook`) — sem limite de execuções
+- [x] Webhook da Evolution API apontando para a Vercel (evento `MESSAGES_UPSERT`)
 - [x] Bot responde com saudação pelo nome + menu de opções
 - [x] Vercel redeployado com variáveis corretas da v1
 
@@ -39,13 +39,13 @@ Sistema de gestão para pequenos negócios (SaaS multi-tenant) com bot de atendi
 | Serviço | URL / Info |
 |---|---|
 | Site (produção) | https://wk-presentes.vercel.app |
+| Webhook do bot | `https://wk-presentes.vercel.app/api/whatsapp-webhook` |
 | Evolution API v1 | `https://evolution-api-production-c20c.up.railway.app` |
 | API Key v1 | `5B37DF4F-63EF-4262-9E72-B6C539BA65F2` |
-| n8n Cloud (bot) | https://barboza11.app.n8n.cloud |
-| Workflow bot | ID `JnC9Obd9PPPMojQ3` — Bot WK Presentes |
 | Supabase | https://supabase.com/dashboard → projeto `ecimoomzvdvzahmiyudg` |
 | Railway (v1) | https://railway.app → projeto `handsome-gratitude` |
 | Railway (v2) | https://railway.app → projeto `carefree-mercy` (**bloqueado pelo WhatsApp**) |
+| n8n Cloud | https://barboza11.app.n8n.cloud — workflow `Bot WK Presentes` (ID `JnC9Obd9PPPMojQ3`) **DESATIVADO**, mantido apenas como referência |
 
 ---
 
@@ -56,20 +56,22 @@ Cliente manda mensagem no WhatsApp
         ↓
 Evolution API (v1, Railway) dispara webhook MESSAGES_UPSERT
         ↓
-n8n Cloud recebe em /webhook/whatsapp-bot
+Vercel Function /api/whatsapp-webhook recebe o POST
         ↓
-[Extrair Mensagem] extrai: remoteJid, pushName, text, isGroup, fromMe
+Extrai: remoteJid, pushName, text, isGroup, fromMe
         ↓
-[Mensagem Válida?] filtra: ignora grupos, mensagens próprias e vazias
+Filtra: ignora grupos, mensagens próprias e vazias
         ↓
-[Opção do Menu] roteador switch:
-  1 → Enviar Produtos
+Roteador por texto:
+  1 → Produtos
   2 → Verificar Pedido
   3 → Falar Atendente
-  (qualquer outra) → Enviar Menu (saudação com nome)
+  (qualquer outra) → Menu/Saudação (com nome)
         ↓
 HTTP POST para Evolution API v1 → mensagem enviada ao cliente
 ```
+
+Código-fonte do bot: [`api/whatsapp-webhook.js`](api/whatsapp-webhook.js)
 
 **Mensagens do bot:**
 - **Saudação/Menu:** `Olá, {nome}! 👋 Bem-vindo à WK Presentes 🎁 [menu 1/2/3]`
@@ -120,46 +122,65 @@ HTTP POST para Evolution API v1 → mensagem enviada ao cliente
 
 ---
 
-## 📦 Alterações desta sessão
+### Problema 5 — Bot parou de responder: limite de execuções do n8n
 
-### `supabase/schema.sql`
+**Causa:** O plano gratuito do n8n Cloud (`barboza11.app.n8n.cloud`) estourou o limite de **1000 execuções/mês**. As últimas **356 execuções** do workflow do bot retornaram erro:
+> "Execution limit reached. Consider upgrading your plan."
+
+Ou seja, toda mensagem recebida no WhatsApp disparava o webhook, mas o n8n recusava executar o workflow — o bot ficou completamente mudo.
+
+**Solução definitiva:** Migrar a lógica do bot do n8n para uma **Vercel Serverless Function** (`/api/whatsapp-webhook.js`), que roda no mesmo projeto/deploy do painel, é gratuita no plano Hobby e **não tem limite mensal de execuções** para esse volume.
+
+- O webhook da Evolution API foi atualizado para `https://wk-presentes.vercel.app/api/whatsapp-webhook`
+- O workflow `Bot WK Presentes` no n8n foi **desativado** (mantido apenas como referência/backup da lógica)
+
+---
+
+## 📦 Histórico de alterações
+
+### Sessão 2 (atual) — Bot migrado para Vercel Function
+
+- **Novo arquivo `api/whatsapp-webhook.js`**: reimplementa toda a lógica do bot (saudação + menu 1/2/3) como Vercel Serverless Function, sem depender do n8n
+- **`vercel.json`**: rewrite do SPA ajustado para `/((?!api/).*)`, garantindo que `/api/*` não seja redirecionado para `index.html`
+- **Webhook da Evolution API v1** atualizado de `barboza11.app.n8n.cloud/webhook/whatsapp-bot` → `https://wk-presentes.vercel.app/api/whatsapp-webhook`
+- **Workflow `Bot WK Presentes` no n8n desativado** (estourou limite de 1000 execuções/mês do plano gratuito — ver Problema 5)
+- Testado em produção: endpoint responde `{"ok":true}` e envia mensagens reais via Evolution API
+
+### Sessão 1 — Conexão WhatsApp + bot inicial no n8n
+
+#### `supabase/schema.sql`
 - Adicionada coluna `evolution_instance TEXT` na tabela `businesses` — armazena o nome da instância WhatsApp de cada empresa (ex: `biz88c90e06eb494c5d`)
-- Adicionada coluna `qr_code TEXT` na tabela `businesses` — usada pelo n8n para guardar o base64 do QR Code temporariamente durante a conexão
+- Adicionada coluna `qr_code TEXT` na tabela `businesses` — usada para guardar o base64 do QR Code temporariamente durante a conexão
 
-### `src/pages/Configuracoes.tsx`
+#### `src/pages/Configuracoes.tsx`
 - Implementada aba **"WhatsApp"** completa com 4 estados: `loading`, `disconnected`, `qrcode`, `connected`
-- Polling do Supabase a cada 3s aguardando QR Code (salvo pelo n8n via webhook)
+- Polling do Supabase a cada 3s aguardando QR Code
 - Botões de conectar, desconectar e gerar novo QR
 - Usa variáveis de ambiente `VITE_EVOLUTION_API_URL` e `VITE_EVOLUTION_API_KEY`
 
-### `src/pages/Configuracoes.module.css`
+#### `src/pages/Configuracoes.module.css`
 - Estilos completos da aba WhatsApp: `.waBox`, `.waConnected`, `.waStatusDot`, `.waDisconnected`, `.waQr`, `.qrImage`, `.btnConnect`, `.btnDisconnect`, `.btnRefresh`
 
-### `.gitignore`
+#### `.gitignore`
 - Adicionado `.env` (contém segredos — nunca commitar)
 - Adicionado `.env*.local` (tokens Vercel)
 - Adicionado `.claude/` (arquivos de sessão do Claude Code)
 
-### Vercel — variáveis de ambiente atualizadas
+#### Vercel — variáveis de ambiente atualizadas
 - `VITE_EVOLUTION_API_URL` → de `evolution-api-production-eb9d` (v2 bloqueada) para `evolution-api-production-c20c` (v1 funcionando)
 - `VITE_EVOLUTION_API_KEY` → chave correta da v1
-- Redeploy feito em produção
 
-### n8n — Novo workflow criado
-- **Nome:** Bot WK Presentes
-- **ID:** `JnC9Obd9PPPMojQ3`
-- **Conta:** `barboza11.app.n8n.cloud`
-- **Status:** Ativo
-- **Webhook:** `POST https://barboza11.app.n8n.cloud/webhook/whatsapp-bot`
+#### n8n — workflow inicial criado (depois desativado na Sessão 2)
+- **Nome:** Bot WK Presentes — **ID:** `JnC9Obd9PPPMojQ3` — conta `barboza11.app.n8n.cloud`
 - **8 nós:** Webhook → Extrair Mensagem → Mensagem Válida? → Opção do Menu → [Enviar Menu / Enviar Produtos / Verificar Pedido / Falar Atendente]
 
 ---
 
 ## 🚀 Próximos passos
 
-- [ ] Persistência de estado do bot (ex: aguardando número do pedido após opção 2)
+- [ ] Persistência de estado do bot (ex: aguardando número do pedido após opção 2) — hoje a function é stateless
 - [ ] Integrar verificação real de pedidos no Supabase (opção 2 do menu)
-- [ ] Suporte multi-tenant completo: cada empresa SaaS conecta sua própria instância WhatsApp
+- [ ] Suporte multi-tenant completo: cada empresa SaaS conecta sua própria instância WhatsApp e o `api/whatsapp-webhook.js` precisa identificar qual `instance`/empresa recebeu a mensagem (via `body.instance`) e buscar config no Supabase
 - [ ] Frontend detectar `evolution_instance` existente e mostrar status conectado automaticamente
 - [ ] Reconexão automática quando o WhatsApp desconectar
 
@@ -168,6 +189,9 @@ HTTP POST para Evolution API v1 → mensagem enviada ao cliente
 ## 📁 Estrutura do projeto
 
 ```
+api/
+└── whatsapp-webhook.js     # Bot WhatsApp (Vercel Serverless Function)
+
 src/
 ├── pages/
 │   ├── Login.tsx           # Login split-screen
