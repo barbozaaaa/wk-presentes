@@ -16,7 +16,8 @@ export default function Financeiro() {
     const revenue = mo.reduce((s, o) => s + (o.total_value ?? 0), 0)
     const cost    = mo.reduce((s, o) => s + (o.cost ?? 0), 0)
     const profit  = revenue - cost
-    const label   = new Date(m + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
+    const [year, monthNum] = m.split('-').map(Number)
+    const label   = new Date(year, monthNum - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })
     return { month: m, label, revenue, cost, profit, count: mo.length }
   })
 

@@ -145,7 +145,7 @@ export default function Clientes({ onToast }: Props) {
               </div>
               <div className={styles.statDivider} />
               <div className={styles.statRow}>
-                <span className={styles.statLabel}>Total faturado</span>
+                <span className={styles.statLabel}>Valor total em pedidos</span>
                 <span className={styles.statVal} style={{ color: '#c17f4a', fontWeight: 800 }}>R${totalSpent.toFixed(2)}</span>
               </div>
             </div>
