@@ -13,11 +13,12 @@ drop function if exists handle_new_user();
 
 -- 1. BUSINESSES (empresas cadastradas)
 create table businesses (
-  id         uuid primary key default gen_random_uuid(),
-  owner_id   uuid references auth.users(id) on delete cascade not null,
-  name       text not null default 'Meu Negócio',
-  plan       text not null default 'trial' check (plan in ('trial', 'basic', 'pro')),
-  created_at timestamptz default now()
+  id                 uuid primary key default gen_random_uuid(),
+  owner_id           uuid references auth.users(id) on delete cascade not null,
+  name               text not null default 'Meu Negócio',
+  plan               text not null default 'trial' check (plan in ('trial', 'basic', 'pro')),
+  evolution_instance text,
+  created_at         timestamptz default now()
 );
 
 -- 2. CUSTOMERS (clientes da empresa)

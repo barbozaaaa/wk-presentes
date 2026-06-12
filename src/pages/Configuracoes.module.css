@@ -120,6 +120,65 @@
 .btnSave:hover:not(:disabled) { opacity: 0.9; }
 .btnSave:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* WhatsApp */
+.waBox {
+  padding: 1rem 0 1.5rem;
+}
+.waConnected {
+  display: flex; align-items: center; gap: 1rem;
+  background: #f0faf4; border: 1.5px solid #a8e0c0;
+  border-radius: 14px; padding: 1.25rem 1.5rem;
+}
+.waStatusDot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #25d366; flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(37,211,102,0.25);
+}
+.waDisconnected {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.75rem; padding: 2rem 1rem; text-align: center;
+}
+.waIcon { font-size: 2.5rem; }
+.waStatusTitle { font-size: 0.95rem; font-weight: 700; color: #2c1810; }
+.waStatusDesc  { font-size: 0.8rem; color: #9a8070; max-width: 360px; line-height: 1.5; }
+.waQr {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.75rem; padding: 1.5rem 1rem; text-align: center;
+}
+.qrImage {
+  width: 220px; height: 220px; border-radius: 12px;
+  border: 2px solid #e8ddd0; background: #fff;
+}
+.waHint { font-size: 0.75rem; color: #9a8070; }
+.btnConnect {
+  padding: 0.65rem 1.75rem;
+  background: #25d366; color: #fff;
+  border: none; border-radius: 10px;
+  font-size: 0.875rem; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btnConnect:hover:not(:disabled) { opacity: 0.88; }
+.btnConnect:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnDisconnect {
+  margin-left: auto; padding: 0.45rem 1rem;
+  background: #fee2e2; color: #b91c1c;
+  border: none; border-radius: 8px;
+  font-size: 0.78rem; font-weight: 700; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.btnDisconnect:hover:not(:disabled) { opacity: 0.8; }
+.btnDisconnect:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnRefresh {
+  padding: 0.5rem 1.25rem;
+  background: #f0e8dc; color: #7a3d1a;
+  border: none; border-radius: 8px;
+  font-size: 0.8rem; font-weight: 600; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btnRefresh:hover:not(:disabled) { opacity: 0.8; }
+.btnRefresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
 @media (max-width: 600px) {
   .page { padding: 1rem; }
   .tabs { width: 100%; }
